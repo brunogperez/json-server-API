@@ -1,0 +1,1414 @@
+{
+  "users": [
+    {
+      "id": "0f87",
+      "firstName": "Paula",
+      "lastName": "Martinez",
+      "email": "paulamartinez@mail.com",
+      "createdAt": "2023-01-01T00:00:00.000Z",
+      "password": "123123123",
+      "token": "aB2cD3eF4gH5iJ6kasdasadasdasd",
+      "role": "admin"
+    },
+    {
+      "id": "ltX6",
+      "firstName": "Test",
+      "lastName": "Test",
+      "email": "test@test.com",
+      "password": "123123123",
+      "role": "user",
+      "createdAt": "2024-11-11T18:25:03.959Z",
+      "token": "GgXPxsf54tYCJzb"
+    },
+    {
+      "id": "AA6L",
+      "firstName": "Admin",
+      "lastName": "Admin",
+      "email": "admin@mail.com",
+      "password": "123123123",
+      "role": "admin",
+      "createdAt": "2024-11-11T18:43:19.382Z",
+      "token": "FcEoFyIe9gUnw7H"
+    },
+    {
+      "id": "LuJj",
+      "firstName": "Bruno",
+      "lastName": "Perez",
+      "email": "bruno.perez@mail.com",
+      "password": "123123123",
+      "role": "admin",
+      "createdAt": "2024-11-11T19:33:59.910Z",
+      "token": "Ey8VhncR9NsN7f7"
+    }
+  ],
+  "students": [
+    {
+      "id": "01JCEA5G87NWRY1X8TAF3JZZKZ",
+      "firstName": "Sharla",
+      "lastName": "Dicka",
+      "email": "sdick0@unblog.fr",
+      "birthdate": "1995-10-27T12:45:01Z",
+      "createdAt": "2017-05-17T10:44:39Z"
+    },
+    {
+      "id": "01JCEA5G89ZG74033D40VM7J8Y",
+      "firstName": "Melly",
+      "lastName": "Bauckham",
+      "email": "mbauckham2@mozilla.org",
+      "birthdate": "1993-08-22T08:30:15Z",
+      "createdAt": "2018-02-02T07:49:32Z"
+    },
+    {
+      "id": "01JCEA5G8AVW0C9RXSSKH7NPT6",
+      "firstName": "Benny",
+      "lastName": "Nieass",
+      "email": "bnieass3@theatlantic.com",
+      "birthdate": "2003-05-30T05:09:23Z",
+      "createdAt": "2022-01-23T11:09:09Z"
+    },
+    {
+      "id": "01JCEA5G8AHX0SRQP57B6BH66V",
+      "firstName": "Corena",
+      "lastName": "Bourbon",
+      "email": "cbourbon4@google.co.uk",
+      "birthdate": "1991-05-05T12:42:20Z",
+      "createdAt": "2015-09-28T03:01:26Z"
+    },
+    {
+      "id": "01JCEA5G8BEP67ZKHV6ET66XCJ",
+      "firstName": "Darcey",
+      "lastName": "Feander",
+      "email": "dfeander5@netscape.com",
+      "birthdate": "2000-02-01T04:43:02Z",
+      "createdAt": "2015-01-11T04:52:43Z"
+    },
+    {
+      "id": "01JCEA5G8CZN32KCDTAS94P44H",
+      "firstName": "Tiebold",
+      "lastName": "Dickerline",
+      "email": "tdickerline6@twitpic.com",
+      "birthdate": "1999-05-29T05:26:48Z",
+      "createdAt": "2020-08-12T03:29:18Z"
+    },
+    {
+      "id": "01JCEA5G8DZMK1WC9DHWD5SQVV",
+      "firstName": "Melisa",
+      "lastName": "Culwen",
+      "email": "mculwen7@infoseek.co.jp",
+      "birthdate": "1991-02-14T09:19:54Z",
+      "createdAt": "2023-10-08T01:09:03Z"
+    },
+    {
+      "id": "01JCEA5G8D4R562C3A1GPGKDRS",
+      "firstName": "Lemmy",
+      "lastName": "Cossins",
+      "email": "lcossins8@blinklist.com",
+      "birthdate": "2000-06-05T05:38:59Z",
+      "createdAt": "2016-04-08T06:18:25Z"
+    },
+    {
+      "id": "01JCEA5G8FPB5X0J5C1JD85MQD",
+      "firstName": "Donalt",
+      "lastName": "Ganley",
+      "email": "dganley9@kickstarter.com",
+      "birthdate": "1990-07-17T07:14:29Z",
+      "createdAt": "2024-10-30T07:23:58Z"
+    },
+    {
+      "id": "01JCEA5G8GG2S6CRTQK20FPKXD",
+      "firstName": "Lina",
+      "lastName": "Dallimare",
+      "email": "ldallimarea@nymag.com",
+      "birthdate": "2003-08-07T21:10:25Z",
+      "createdAt": "2020-06-16T00:46:02Z"
+    },
+    {
+      "id": "01JCEA5G8H9H3T87DWWSZAJSEW",
+      "firstName": "Nathanial",
+      "lastName": "Gianuzzi",
+      "email": "ngianuzzib@sciencedirect.com",
+      "birthdate": "2004-06-23T19:01:37Z",
+      "createdAt": "2022-08-24T17:41:11Z"
+    },
+    {
+      "id": "01JCEA5G8K3M9TJE7NRBD90KXX",
+      "firstName": "Allianora",
+      "lastName": "Gapp",
+      "email": "agappc@bloglines.com",
+      "birthdate": "1998-10-09T16:37:54Z",
+      "createdAt": "2015-11-01T17:34:48Z"
+    },
+    {
+      "id": "01JCEA5G8MX87TN0V8CCRN5XT4",
+      "firstName": "Kimmi",
+      "lastName": "Dillway",
+      "email": "kdillwayd@unblog.fr",
+      "birthdate": "2000-04-06T04:47:49Z",
+      "createdAt": "2020-09-07T14:22:24Z"
+    },
+    {
+      "id": "01JCEA5GA68BF54GYJ2FQTB3Y8",
+      "firstName": "Letizia",
+      "lastName": "Grinter",
+      "email": "lgrintere@constantcontact.com",
+      "birthdate": "1990-04-22T03:24:32Z",
+      "createdAt": "2020-02-01T10:33:29Z"
+    },
+    {
+      "id": "01JCEA5GAAP2RQYBYZ9KQ4W57G",
+      "firstName": "Almira",
+      "lastName": "Assad",
+      "email": "aassadf@ft.com",
+      "birthdate": "2004-09-01T16:42:24Z",
+      "createdAt": "2018-10-24T10:45:02Z"
+    },
+    {
+      "id": "01JCEA5GACTQNGRB8G6JZW36W8",
+      "firstName": "Rem",
+      "lastName": "Pockey",
+      "email": "rpockeyg@artisteer.com",
+      "birthdate": "2000-02-27T01:57:43Z",
+      "createdAt": "2019-08-01T20:42:23Z"
+    },
+    {
+      "id": "01JCEA5GADH4ZQSSEQM4Z70NYD",
+      "firstName": "Julissa",
+      "lastName": "Spall",
+      "email": "jspallh@1688.com",
+      "birthdate": "1990-12-17T13:34:45Z",
+      "createdAt": "2017-01-26T08:45:36Z"
+    },
+    {
+      "id": "01JCEA5GAFX75A5WWWVZS20KXG",
+      "firstName": "Leonelle",
+      "lastName": "Munns",
+      "email": "lmunnsi@patch.com",
+      "birthdate": "1994-09-13T06:35:09Z",
+      "createdAt": "2016-12-17T05:33:56Z"
+    },
+    {
+      "id": "01JCEA5GAH2R18FYQ033QJ84B8",
+      "firstName": "Muffin",
+      "lastName": "Moncrefe",
+      "email": "mmoncrefej@goodreads.com",
+      "birthdate": "1996-06-20T01:52:12Z",
+      "createdAt": "2018-02-27T05:10:14Z"
+    },
+    {
+      "id": "01JCEA5GAJWPHNEGZAN72A64NN",
+      "firstName": "Fionna",
+      "lastName": "Keighly",
+      "email": "fkeighlyk@shareasale.com",
+      "birthdate": "2005-06-10T04:51:50Z",
+      "createdAt": "2020-11-18T17:17:18Z"
+    },
+    {
+      "id": "01JCEA5GAM9XBSBHF4ZRJFSF39",
+      "firstName": "Lauren",
+      "lastName": "Beeby",
+      "email": "lbeebyl@devhub.com",
+      "birthdate": "2005-06-29T23:32:37Z",
+      "createdAt": "2023-06-27T04:11:01Z"
+    },
+    {
+      "id": "01JCEA5GANNWTYTE2MF7D9NMZB",
+      "firstName": "Joby",
+      "lastName": "Isaacson",
+      "email": "jisaacsonm@cmu.edu",
+      "birthdate": "1999-09-26T08:11:45Z",
+      "createdAt": "2018-02-28T11:21:22Z"
+    },
+    {
+      "id": "01JCEA5GAPABBS6CWGWPAHCMQ4",
+      "firstName": "Tasha",
+      "lastName": "Maddyson",
+      "email": "tmaddysonn@skype.com",
+      "birthdate": "1999-02-27T13:56:44Z",
+      "createdAt": "2021-06-05T20:26:49Z"
+    },
+    {
+      "id": "01JCEA5GARVW2H42NESMTRV2WZ",
+      "firstName": "Rubi",
+      "lastName": "Bausmann",
+      "email": "rbausmanno@fda.gov",
+      "birthdate": "1991-03-02T00:15:57Z",
+      "createdAt": "2021-05-20T08:01:33Z"
+    },
+    {
+      "id": "01JCEA5GAS6EAYT1J69884QNFB",
+      "firstName": "Milton",
+      "lastName": "Cornhill",
+      "email": "mcornhillp@e-recht24.de",
+      "birthdate": "2004-05-02T02:59:59Z",
+      "createdAt": "2017-10-13T08:52:59Z"
+    },
+    {
+      "id": "01JCEA5GAV1QAHAQFXPY69QM59",
+      "firstName": "Goddart",
+      "lastName": "Lammas",
+      "email": "glammasq@over-blog.com",
+      "birthdate": "1997-04-07T17:40:15Z",
+      "createdAt": "2016-10-12T20:42:52Z"
+    },
+    {
+      "id": "01JCEA5GAWRVF0NJ3MCFKJHY56",
+      "firstName": "Shellysheldon",
+      "lastName": "Stonard",
+      "email": "sstonardr@abc.net.au",
+      "birthdate": "1994-02-08T08:27:47Z",
+      "createdAt": "2016-11-29T12:13:44Z"
+    },
+    {
+      "id": "01JCEA5GAXB56250T2ZJG7T06E",
+      "firstName": "Sharleen",
+      "lastName": "Benjamin",
+      "email": "sbenjamins@hexun.com",
+      "birthdate": "2001-11-07T21:23:20Z",
+      "createdAt": "2016-08-16T13:45:05Z"
+    },
+    {
+      "id": "01JCEA5GAZEWW3ZC2SSZEX4P5K",
+      "firstName": "Emylee",
+      "lastName": "Sheriff",
+      "email": "esherifft@dailymail.co.uk",
+      "birthdate": "2002-02-22T08:59:45Z",
+      "createdAt": "2018-03-14T02:45:31Z"
+    },
+    {
+      "id": "01JCEA5GB0TTQMAMCDQW3J733V",
+      "firstName": "Dotty",
+      "lastName": "Girod",
+      "email": "dgirodu@cdbaby.com",
+      "birthdate": "1999-02-18T12:07:31Z",
+      "createdAt": "2021-01-13T22:39:10Z"
+    },
+    {
+      "id": "01JCEA5GB2WHE1YAA5ZG6YVNEW",
+      "firstName": "Dannel",
+      "lastName": "Scrowby",
+      "email": "dscrowbyv@alibaba.com",
+      "birthdate": "1993-06-07T02:35:42Z",
+      "createdAt": "2020-09-28T07:12:36Z"
+    },
+    {
+      "id": "01JCEA5GB3V6GZB3NX3J3HN0RY",
+      "firstName": "Lusa",
+      "lastName": "Doll",
+      "email": "ldollw@mayoclinic.com",
+      "birthdate": "2005-08-15T22:20:45Z",
+      "createdAt": "2020-03-28T03:04:56Z"
+    },
+    {
+      "id": "01JCEA5GB5FRX7T379A9VZ880R",
+      "firstName": "Braden",
+      "lastName": "Leeson",
+      "email": "bleesonx@opensource.org",
+      "birthdate": "2002-07-09T10:54:30Z",
+      "createdAt": "2016-12-06T18:02:45Z"
+    },
+    {
+      "id": "01JCEA5GB68ATDPK6KRWP1PJ62",
+      "firstName": "Ysabel",
+      "lastName": "Gould",
+      "email": "ygouldy@edublogs.org",
+      "birthdate": "2001-10-01T18:27:29Z",
+      "createdAt": "2024-01-06T00:50:26Z"
+    },
+    {
+      "id": "01JCEA5GB7GBCZD5XN85GFXDV6",
+      "firstName": "Ransom",
+      "lastName": "Toulamain",
+      "email": "rtoulamainz@marketwatch.com",
+      "birthdate": "1998-12-13T04:47:11Z",
+      "createdAt": "2017-10-28T14:19:02Z"
+    },
+    {
+      "id": "01JCEA5GB8DA4JDHJ54EFQZCVH",
+      "firstName": "Jackquelin",
+      "lastName": "Inde",
+      "email": "jinde10@nature.com",
+      "birthdate": "1997-11-07T04:42:51Z",
+      "createdAt": "2019-08-10T05:48:17Z"
+    },
+    {
+      "id": "01JCEA5GB9FQH1PMDB1MN30YK4",
+      "firstName": "Nissy",
+      "lastName": "Pallant",
+      "email": "npallant11@nature.com",
+      "birthdate": "2002-01-17T23:35:18Z",
+      "createdAt": "2021-06-04T11:58:09Z"
+    },
+    {
+      "id": "01JCEA5GBAFJ2324D0MZM436XD",
+      "firstName": "Verine",
+      "lastName": "Madgin",
+      "email": "vmadgin12@diigo.com",
+      "birthdate": "2003-01-11T20:25:40Z",
+      "createdAt": "2023-08-06T20:39:50Z"
+    },
+    {
+      "id": "01JCEA5GBCX76EJJBWE10Y45BG",
+      "firstName": "Stefan",
+      "lastName": "Momery",
+      "email": "smomery13@dailymail.co.uk",
+      "birthdate": "1990-01-05T03:04:17Z",
+      "createdAt": "2018-08-21T07:24:42Z"
+    },
+    {
+      "id": "01JCEA5GBDY5E4WV60NSA8X5WP",
+      "firstName": "Sheela",
+      "lastName": "Collard",
+      "email": "scollard14@google.fr",
+      "birthdate": "2000-01-27T02:19:30Z",
+      "createdAt": "2016-06-15T23:36:37Z"
+    },
+    {
+      "id": "01JCEA5GBES476J5YGB42X824S",
+      "firstName": "Damara",
+      "lastName": "Hill",
+      "email": "dhill15@ibm.com",
+      "birthdate": "1997-06-22T12:40:21Z",
+      "createdAt": "2023-10-09T05:18:05Z"
+    },
+    {
+      "id": "01JCEA5GBFK4PX7N9YQQYGNT5G",
+      "firstName": "Zebadiah",
+      "lastName": "Lunt",
+      "email": "zlunt16@nydailynews.com",
+      "birthdate": "2003-07-15T00:48:39Z",
+      "createdAt": "2015-10-09T08:22:43Z"
+    },
+    {
+      "id": "01JCEA5GBGZCNNSXKBMY1ZRTRZ",
+      "firstName": "Madalyn",
+      "lastName": "Lytle",
+      "email": "mlytle17@wired.com",
+      "birthdate": "2003-06-06T12:56:52Z",
+      "createdAt": "2024-09-20T21:33:02Z"
+    },
+    {
+      "id": "01JCEA5GBHN27PEWBRV6KE8HGK",
+      "firstName": "Delcine",
+      "lastName": "Perham",
+      "email": "dperham18@clickbank.net",
+      "birthdate": "1992-03-13T00:09:25Z",
+      "createdAt": "2024-05-21T09:11:36Z"
+    },
+    {
+      "id": "01JCEA5GBK6YA623ZA7FCBAYRE",
+      "firstName": "Graehme",
+      "lastName": "O'Heneghan",
+      "email": "goheneghan19@businessweek.com",
+      "birthdate": "1992-10-25T04:45:26Z",
+      "createdAt": "2021-08-28T11:29:44Z"
+    },
+    {
+      "id": "01JCEA5GBM1TM1J9YY6SC4YMGQ",
+      "firstName": "Hedy",
+      "lastName": "Andrzejak",
+      "email": "handrzejak1a@reference.com",
+      "birthdate": "2004-12-03T12:59:56Z",
+      "createdAt": "2023-05-28T01:31:42Z"
+    },
+    {
+      "id": "01JCEA5GBPX8JWV4XYTKYGZZYR",
+      "firstName": "Jacquelyn",
+      "lastName": "Breed",
+      "email": "jbreed1b@cloudflare.com",
+      "birthdate": "1999-04-19T01:43:18Z",
+      "createdAt": "2022-10-14T06:08:43Z"
+    },
+    {
+      "id": "01JCEA5GBQS8X4XSNS0W4ZQ8NS",
+      "firstName": "Tawnya",
+      "lastName": "Bevan",
+      "email": "tbevan1c@creativecommons.org",
+      "birthdate": "1996-07-06T06:54:05Z",
+      "createdAt": "2020-07-16T23:40:24Z"
+    },
+    {
+      "id": "01JCEA5GBQB75FZKYP8K17F6V3",
+      "firstName": "Muhammad",
+      "lastName": "Abbie",
+      "email": "mabbie1d@delicious.com",
+      "birthdate": "1990-05-18T19:16:23Z",
+      "createdAt": "2018-12-27T13:55:51Z"
+    },
+    {
+      "id": "01JCEA5GBRDDHF51TG096YYNCM",
+      "firstName": "Mahala",
+      "lastName": "Doche",
+      "email": "mdoche1e@marriott.com",
+      "birthdate": "1993-08-15T21:17:13Z",
+      "createdAt": "2022-11-29T17:55:12Z"
+    },
+    {
+      "id": "01JCEA5GBSM7TDH86YC0M4CJY0",
+      "firstName": "Gerry",
+      "lastName": "Rosa",
+      "email": "grosa1f@sitemeter.com",
+      "birthdate": "1995-05-01T02:30:06Z",
+      "createdAt": "2024-01-27T20:01:36Z"
+    },
+    {
+      "id": "01JCEA5GBT61FM23GR2DCQ9ZKH",
+      "firstName": "Candi",
+      "lastName": "Axup",
+      "email": "caxup1g@jalbum.net",
+      "birthdate": "1999-07-25T01:27:46Z",
+      "createdAt": "2016-07-28T03:24:40Z"
+    },
+    {
+      "id": "01JCEA5GBT0QCPEA3QZ7Z6PGPA",
+      "firstName": "Hinda",
+      "lastName": "Blease",
+      "email": "hblease1h@skyrock.com",
+      "birthdate": "2001-06-23T20:32:02Z",
+      "createdAt": "2023-11-04T00:23:04Z"
+    },
+    {
+      "id": "01JCEA5GBVXXBYWY4CPFY3CRQF",
+      "firstName": "Barnett",
+      "lastName": "Bruhnke",
+      "email": "bbruhnke1i@discovery.com",
+      "birthdate": "2004-08-10T20:04:18Z",
+      "createdAt": "2020-10-15T21:58:37Z"
+    },
+    {
+      "id": "01JCEA5GBWJ7E93PM0XDM74DC7",
+      "firstName": "Elora",
+      "lastName": "Chasmor",
+      "email": "echasmor1j@economist.com",
+      "birthdate": "2005-09-28T07:34:03Z",
+      "createdAt": "2019-04-20T17:39:20Z"
+    },
+    {
+      "id": "01JCEA5GBXFRBYY0PWR7G8DXRM",
+      "firstName": "Gertrude",
+      "lastName": "Sholem",
+      "email": "gsholem1k@skype.com",
+      "birthdate": "1993-12-09T20:44:36Z",
+      "createdAt": "2021-08-16T21:33:18Z"
+    },
+    {
+      "id": "01JCEA5GBYM0WWSCYF53ESQ0ZZ",
+      "firstName": "Bram",
+      "lastName": "Rowlin",
+      "email": "browlin1l@lycos.com",
+      "birthdate": "1993-04-22T21:49:46Z",
+      "createdAt": "2023-10-26T14:13:15Z"
+    },
+    {
+      "id": "01JCEA5GBZTVCF6AQQAPABBNR8",
+      "firstName": "Clemens",
+      "lastName": "McSporrin",
+      "email": "cmcsporrin1m@nsw.gov.au",
+      "birthdate": "2000-07-17T10:21:03Z",
+      "createdAt": "2024-11-17T12:25:14Z"
+    },
+    {
+      "id": "01JCEA5GC06RC969MKPDBBAX2M",
+      "firstName": "Desi",
+      "lastName": "Harnott",
+      "email": "dharnott1n@gmpg.org",
+      "birthdate": "1993-04-26T14:48:28Z",
+      "createdAt": "2022-09-28T12:10:22Z"
+    },
+    {
+      "id": "01JCEA5GC14GCCMZ0ZZD1M0YFZ",
+      "firstName": "Bartolomeo",
+      "lastName": "Joliffe",
+      "email": "bjoliffe1o@va.gov",
+      "birthdate": "1998-10-04T15:02:21Z",
+      "createdAt": "2016-08-27T09:23:52Z"
+    },
+    {
+      "id": "01JCEA5GC229CHVPWWPJ9CZWPZ",
+      "firstName": "Dolley",
+      "lastName": "Loffill",
+      "email": "dloffill1p@hubpages.com",
+      "birthdate": "2005-08-28T01:15:40Z",
+      "createdAt": "2021-03-30T23:38:46Z"
+    },
+    {
+      "id": "01JCEA5GC337T5HSXS90VDX3ZV",
+      "firstName": "Madonna",
+      "lastName": "Digweed",
+      "email": "mdigweed1q@wikimedia.org",
+      "birthdate": "1994-03-02T15:53:06Z",
+      "createdAt": "2017-02-16T08:54:32Z"
+    },
+    {
+      "id": "01JCEA5GC354262TH01TEMAM1D",
+      "firstName": "Sharia",
+      "lastName": "Tiffney",
+      "email": "stiffney1r@google.es",
+      "birthdate": "2001-12-20T13:38:29Z",
+      "createdAt": "2022-07-11T17:44:04Z"
+    },
+    {
+      "id": "01JCEA5GC4XTJNY4EQZHQ4VV66",
+      "firstName": "Xever",
+      "lastName": "Real",
+      "email": "xreal1s@whitehouse.gov",
+      "birthdate": "2000-11-28T19:43:56Z",
+      "createdAt": "2015-02-18T20:59:52Z"
+    },
+    {
+      "id": "01JCEA5GC549J31V87793W2NS0",
+      "firstName": "Haley",
+      "lastName": "Ibert",
+      "email": "hibert1t@ezinearticles.com",
+      "birthdate": "2003-06-10T06:31:55Z",
+      "createdAt": "2018-12-19T19:10:45Z"
+    },
+    {
+      "id": "01JCEA5GC63YFMPM92FRF15WT2",
+      "firstName": "Cynthy",
+      "lastName": "Ewer",
+      "email": "cewer1u@loc.gov",
+      "birthdate": "1997-07-15T04:39:50Z",
+      "createdAt": "2020-04-25T12:09:45Z"
+    },
+    {
+      "id": "01JCEA5GC63RFAQ56CN1EDTA2J",
+      "firstName": "Ennis",
+      "lastName": "Teare",
+      "email": "eteare1v@springer.com",
+      "birthdate": "1996-12-01T16:11:42Z",
+      "createdAt": "2021-04-18T11:15:10Z"
+    },
+    {
+      "id": "01JCEA5GC7T2G146Q6VC54M8BP",
+      "firstName": "Quincey",
+      "lastName": "Lappin",
+      "email": "qlappin1w@ovh.net",
+      "birthdate": "1990-11-16T02:29:48Z",
+      "createdAt": "2018-03-08T15:08:51Z"
+    },
+    {
+      "id": "01JCEA5GC8HWHSGAY0XGE4AJE9",
+      "firstName": "Sean",
+      "lastName": "Charette",
+      "email": "scharette1x@paypal.com",
+      "birthdate": "1992-09-04T19:07:26Z",
+      "createdAt": "2020-09-03T19:26:30Z"
+    },
+    {
+      "id": "01JCEA5GC97HXG3FJJK83443TS",
+      "firstName": "Roslyn",
+      "lastName": "O'Criane",
+      "email": "rocriane1y@sourceforge.net",
+      "birthdate": "1997-02-16T04:06:29Z",
+      "createdAt": "2024-02-18T21:06:54Z"
+    },
+    {
+      "id": "01JCEA5GC9Q49N51JC93W1FKZR",
+      "firstName": "Morgun",
+      "lastName": "McQuilty",
+      "email": "mmcquilty1z@china.com.cn",
+      "birthdate": "2005-03-10T19:45:57Z",
+      "createdAt": "2024-03-03T09:18:55Z"
+    },
+    {
+      "id": "01JCEA5GCAXX1MGEZEDX64QD2P",
+      "firstName": "Lorrie",
+      "lastName": "Fawcett",
+      "email": "lfawcett20@senate.gov",
+      "birthdate": "1991-05-28T03:02:58Z",
+      "createdAt": "2016-06-29T10:59:00Z"
+    },
+    {
+      "id": "01JCEA5GCBTBA149WDWRBJ9N8K",
+      "firstName": "Crawford",
+      "lastName": "Huggin",
+      "email": "chuggin21@furl.net",
+      "birthdate": "1992-01-18T17:09:17Z",
+      "createdAt": "2018-02-17T04:48:23Z"
+    },
+    {
+      "id": "01JCEA5GCBREYKCBYV1ZP3ME0H",
+      "firstName": "Jeramie",
+      "lastName": "Farnall",
+      "email": "jfarnall22@jugem.jp",
+      "birthdate": "1999-03-06T09:00:09Z",
+      "createdAt": "2020-09-16T17:02:54Z"
+    },
+    {
+      "id": "01JCEA5GCCTSQ2R5P974N3CY0M",
+      "firstName": "Abbey",
+      "lastName": "Paxforde",
+      "email": "apaxforde23@topsy.com",
+      "birthdate": "1999-04-15T06:37:43Z",
+      "createdAt": "2016-07-30T09:34:15Z"
+    },
+    {
+      "id": "01JCEA5GCDF56AR6RNR77SS69P",
+      "firstName": "Ardelis",
+      "lastName": "Markus",
+      "email": "amarkus24@g.co",
+      "birthdate": "2000-09-20T18:50:06Z",
+      "createdAt": "2021-12-23T15:49:37Z"
+    },
+    {
+      "id": "01JCEA5GCE2ZBCG5BH8GNAHSFP",
+      "firstName": "Dita",
+      "lastName": "Sindle",
+      "email": "dsindle25@springer.com",
+      "birthdate": "1998-04-02T13:24:53Z",
+      "createdAt": "2020-08-17T19:16:24Z"
+    },
+    {
+      "id": "01JCEA5GCF1NABHKN77KJNFS2F",
+      "firstName": "Valera",
+      "lastName": "Chaplin",
+      "email": "vchaplin26@baidu.com",
+      "birthdate": "2003-05-22T18:00:19Z",
+      "createdAt": "2017-09-15T21:56:13Z"
+    },
+    {
+      "id": "01JCEA5GCFFPD6XSXXAVE0DATE",
+      "firstName": "Jordan",
+      "lastName": "Abethell",
+      "email": "jabethell27@booking.com",
+      "birthdate": "1999-10-07T10:01:27Z",
+      "createdAt": "2019-01-04T10:18:40Z"
+    },
+    {
+      "id": "01JCEA5GCGXW32SJ5YN0NZVFVY",
+      "firstName": "Tulley",
+      "lastName": "Miquelet",
+      "email": "tmiquelet28@delicious.com",
+      "birthdate": "1995-11-29T13:09:31Z",
+      "createdAt": "2024-09-04T05:56:05Z"
+    },
+    {
+      "id": "01JCEA5GCH4JDG7DCKCN9KCR1K",
+      "firstName": "Cora",
+      "lastName": "Lines",
+      "email": "clines29@yale.edu",
+      "birthdate": "1995-02-16T02:46:24Z",
+      "createdAt": "2015-03-31T01:19:07Z"
+    },
+    {
+      "id": "01JCEA5GCHVE2EG5T2PCGYZ1K6",
+      "firstName": "Klarika",
+      "lastName": "Franzetti",
+      "email": "kfranzetti2a@nih.gov",
+      "birthdate": "1998-04-10T10:13:27Z",
+      "createdAt": "2019-11-27T23:30:38Z"
+    },
+    {
+      "id": "01JCEA5GCJ7G2S386EH7FBKSMA",
+      "firstName": "Fin",
+      "lastName": "Beernaert",
+      "email": "fbeernaert2b@weebly.com",
+      "birthdate": "1995-04-01T03:06:08Z",
+      "createdAt": "2018-03-05T02:09:38Z"
+    },
+    {
+      "id": "01JCEA5GCKA10PT22KBCXPH5VR",
+      "firstName": "Carilyn",
+      "lastName": "Keer",
+      "email": "ckeer2c@mlb.com",
+      "birthdate": "2003-05-06T07:56:02Z",
+      "createdAt": "2016-09-15T00:50:30Z"
+    },
+    {
+      "id": "01JCEA5GCMS008G7WXW5K18NB1",
+      "firstName": "Dasie",
+      "lastName": "Matzen",
+      "email": "dmatzen2d@bizjournals.com",
+      "birthdate": "1999-05-05T21:06:39Z",
+      "createdAt": "2017-06-26T18:11:45Z"
+    },
+    {
+      "id": "01JCEA5GCMHM11YNVHPP3C70CH",
+      "firstName": "Sissie",
+      "lastName": "Landy",
+      "email": "slandy2e@imgur.com",
+      "birthdate": "1997-09-27T19:31:05Z",
+      "createdAt": "2015-05-25T18:33:13Z"
+    },
+    {
+      "id": "01JCEA5GCN1W8H8Q03PPB0BZF9",
+      "firstName": "Cassandra",
+      "lastName": "De Beauchamp",
+      "email": "cdebeauchamp2f@telegraph.co.uk",
+      "birthdate": "1993-04-22T19:23:43Z",
+      "createdAt": "2021-02-14T03:59:02Z"
+    },
+    {
+      "id": "01JCEA5GEHEFN0J25NYR4XX658",
+      "firstName": "Zacharie",
+      "lastName": "Frantz",
+      "email": "zfrantz2g@cafepress.com",
+      "birthdate": "1990-04-12T06:45:53Z",
+      "createdAt": "2024-03-21T12:07:57Z"
+    },
+    {
+      "id": "01JCEA5GEJM6PKBH9JKT565SEZ",
+      "firstName": "Jamie",
+      "lastName": "Raysdale",
+      "email": "jraysdale2h@ucla.edu",
+      "birthdate": "1995-02-17T13:28:49Z",
+      "createdAt": "2018-08-08T18:31:40Z"
+    },
+    {
+      "id": "01JCEA5GEM2AFPKXMDTBH9A46Y",
+      "firstName": "Billye",
+      "lastName": "Stagg",
+      "email": "bstagg2i@cafepress.com",
+      "birthdate": "1997-04-05T14:21:04Z",
+      "createdAt": "2019-03-28T20:09:19Z"
+    },
+    {
+      "id": "01JCEA5GEN3ZTDAYMGFNRCZGPH",
+      "firstName": "Ryan",
+      "lastName": "Hovel",
+      "email": "rhovel2j@bluehost.com",
+      "birthdate": "2005-03-31T10:23:39Z",
+      "createdAt": "2021-10-20T05:33:49Z"
+    },
+    {
+      "id": "01JCEA5GEP77RF7VBP8692MECW",
+      "firstName": "Jojo",
+      "lastName": "Cure",
+      "email": "jcure2k@state.gov",
+      "birthdate": "1997-10-28T13:11:00Z",
+      "createdAt": "2024-08-26T00:26:42Z"
+    },
+    {
+      "id": "01JCEA5GERC2A759S6G15P70M5",
+      "firstName": "Meg",
+      "lastName": "Dullingham",
+      "email": "mdullingham2l@prnewswire.com",
+      "birthdate": "2002-06-13T17:08:31Z",
+      "createdAt": "2015-03-04T11:32:57Z"
+    },
+    {
+      "id": "01JCEA5GESGPFYGWXVS9K8M0DE",
+      "firstName": "Leila",
+      "lastName": "Di Roberto",
+      "email": "ldiroberto2m@hibu.com",
+      "birthdate": "2002-01-12T18:20:08Z",
+      "createdAt": "2021-06-21T10:21:53Z"
+    },
+    {
+      "id": "01JCEA5GETR4TJ15R544NG5865",
+      "firstName": "Forrester",
+      "lastName": "Pedlar",
+      "email": "fpedlar2n@about.me",
+      "birthdate": "1996-03-24T23:58:31Z",
+      "createdAt": "2018-08-24T04:55:47Z"
+    },
+    {
+      "id": "01JCEA5GEV749YZ6T2MCC3KKAH",
+      "firstName": "Modestia",
+      "lastName": "Downage",
+      "email": "mdownage2o@dropbox.com",
+      "birthdate": "1996-09-06T03:18:42Z",
+      "createdAt": "2021-11-24T08:55:55Z"
+    },
+    {
+      "id": "01JCEA5GEV9A1GZ61AKSHJH4XG",
+      "firstName": "Kimberli",
+      "lastName": "Jeune",
+      "email": "kjeune2p@mapy.cz",
+      "birthdate": "1992-04-23T20:30:26Z",
+      "createdAt": "2015-09-17T22:49:42Z"
+    },
+    {
+      "id": "01JCEA5GEWTZNZFR2VSRBNNZFA",
+      "firstName": "Lana",
+      "lastName": "Probert",
+      "email": "lprobert2q@eepurl.com",
+      "birthdate": "1997-02-02T06:40:27Z",
+      "createdAt": "2024-06-24T12:50:12Z"
+    },
+    {
+      "id": "01JCEA5GEXYGN7ATJMH9MR94DN",
+      "firstName": "Krisha",
+      "lastName": "Drage",
+      "email": "kdrage2r@nationalgeographic.com",
+      "birthdate": "1998-08-13T13:16:07Z",
+      "createdAt": "2022-02-17T14:10:31Z"
+    },
+    {
+      "id": "Vtes",
+      "firstName": "Bruno",
+      "lastName": "Perez",
+      "email": "brunogperez@mail.com",
+      "birthdate": "1991-10-24T02:00:00.000Z",
+      "createdAt": "2024-11-11T20:01:39.093Z",
+      "token": "7aLDvhparAqIV9y"
+    }
+  ],
+  "courses": [
+    {
+      "id": "OEO66Dp0",
+      "name": "Web Development",
+      "duration": "5 months",
+      "level": "Intermediate",
+      "description": "Learn to build websites from scratch, mastering HTML, CSS, and JavaScript to create interactive and responsive pages.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to Web Development",
+          "date": "2024-01-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "HTML Basics",
+          "date": "2024-01-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "CSS Fundamentals",
+          "date": "2024-01-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "JavaScript for Beginners",
+          "date": "2024-01-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "wCNLG2Gk",
+      "name": "JavaScript",
+      "duration": "2 months",
+      "level": "Intermediate",
+      "description": "Master JavaScript to add interactivity to your web projects and build client-side dynamic applications.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to JavaScript",
+          "date": "2024-02-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Variables and Functions",
+          "date": "2024-02-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "DOM Manipulation",
+          "date": "2024-02-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Advanced JavaScript",
+          "date": "2024-02-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "8jcFtqja",
+      "name": "ReactJS",
+      "duration": "2 months",
+      "level": "Intermediate",
+      "description": "Learn the fundamentals of ReactJS to build modern and efficient user interfaces with reusable components.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "React Basics",
+          "date": "2024-03-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Components and Props",
+          "date": "2024-03-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "State and Lifecycle",
+          "date": "2024-03-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Hooks in React",
+          "date": "2024-03-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "9oEVVcA5",
+      "name": "Backend with Node.js",
+      "duration": "4 months",
+      "level": "Advanced",
+      "description": "Develop robust servers and APIs using Node.js and Express to create scalable and efficient backend applications.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to Node.js",
+          "date": "2024-04-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Express.js Setup",
+          "date": "2024-04-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Building APIs",
+          "date": "2024-04-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Database Integration",
+          "date": "2024-04-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "F6kHCiNg",
+      "name": "Python",
+      "duration": "2 months",
+      "level": "Beginner",
+      "description": "Discover the versatility of Python, a powerful language for automation, data analysis, and software development.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to Python",
+          "date": "2024-05-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Data Types and Variables",
+          "date": "2024-05-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Control Structures",
+          "date": "2024-05-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Functions in Python",
+          "date": "2024-05-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "TFRFwyR0",
+      "name": "Data Analytics",
+      "duration": "5 months",
+      "level": "Beginner",
+      "description": "Learn how to analyze and visualize data to make informed decisions using tools like Excel, SQL, and Tableau.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to Data Analytics",
+          "date": "2024-06-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Data Cleaning and Preparation",
+          "date": "2024-06-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Data Visualization",
+          "date": "2024-06-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Using Tableau",
+          "date": "2024-06-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "E9bb4jy3",
+      "name": "UX/UI Design",
+      "duration": "5 months",
+      "level": "Beginner",
+      "description": "Gain the basics of user-centered design, learning to create intuitive interfaces and effective digital experiences.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to UX/UI",
+          "date": "2024-07-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "User Research",
+          "date": "2024-07-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Wireframing",
+          "date": "2024-07-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Prototyping",
+          "date": "2024-07-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "ScWZzdpi",
+      "name": "Machine Learning",
+      "duration": "3 months",
+      "level": "Advanced",
+      "description": "Discover key concepts of Machine Learning and how to implement predictive models to solve real-world problems.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to Machine Learning",
+          "date": "2024-08-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Supervised Learning",
+          "date": "2024-08-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Unsupervised Learning",
+          "date": "2024-08-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Neural Networks",
+          "date": "2024-08-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "BHbGCCkX",
+      "name": "Cybersecurity",
+      "duration": "4 months",
+      "level": "Advanced",
+      "description": "Learn to protect digital systems by mastering security protocols, risk management, and identifying vulnerabilities.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to Cybersecurity",
+          "date": "2024-09-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Network Security",
+          "date": "2024-09-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Penetration Testing",
+          "date": "2024-09-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Risk Management",
+          "date": "2024-09-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "GC3fQFUj",
+      "name": "UX/UI Design with Figma",
+      "duration": "3 months",
+      "level": "Intermediate",
+      "description": "Enhance your design skills by learning how to create interactive prototypes and user interfaces using Figma.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to Figma",
+          "date": "2024-10-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Designing with Figma",
+          "date": "2024-10-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Prototyping with Figma",
+          "date": "2024-10-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Advanced Figma Techniques",
+          "date": "2024-10-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "KJH1aU98",
+      "name": "UX Writing",
+      "duration": "2 months",
+      "level": "Intermediate",
+      "description": "Learn how to create user-centered content that enhances digital experiences by focusing on tone, clarity, and usability.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to UX Writing",
+          "date": "2024-11-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Tone and Voice",
+          "date": "2024-11-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Writing for Interfaces",
+          "date": "2024-11-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Advanced UX Writing",
+          "date": "2024-11-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "LJU12kP3",
+      "name": "Digital Marketing",
+      "duration": "3 months",
+      "level": "Beginner",
+      "description": "Get introduced to marketing strategies, SEO, social media, and more, to promote products and services effectively online.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to Digital Marketing",
+          "date": "2024-12-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "SEO Fundamentals",
+          "date": "2024-12-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Social Media Marketing",
+          "date": "2024-12-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Email Marketing Strategies",
+          "date": "2024-12-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "YHY76Tr9",
+      "name": "Crypto & Blockchain",
+      "duration": "3 months",
+      "level": "Intermediate",
+      "description": "Dive into the world of cryptocurrency and blockchain technology, exploring their potential applications and impact.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to Crypto",
+          "date": "2024-12-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Blockchain Technology",
+          "date": "2024-12-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Smart Contracts",
+          "date": "2024-12-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Future of Blockchain",
+          "date": "2024-12-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "ERT74Qh4",
+      "name": "Product Management",
+      "duration": "4 months",
+      "level": "Advanced",
+      "description": "Master the art of managing the lifecycle of a product, from concept to launch, with a focus on agile methodologies.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to Product Management",
+          "date": "2024-01-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Agile Methodologies",
+          "date": "2024-01-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Product Roadmaps",
+          "date": "2024-01-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Product Launch",
+          "date": "2024-01-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "PIO43Vm1",
+      "name": "QA Testing (Manual)",
+      "duration": "3 months",
+      "level": "Intermediate",
+      "description": "Gain practical skills in manual quality assurance testing to ensure software functionality and performance meet the required standards.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to QA",
+          "date": "2024-02-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Testing Strategies",
+          "date": "2024-02-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Writing Test Cases",
+          "date": "2024-02-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Manual Testing Tools",
+          "date": "2024-02-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "PIO43Vm1",
+      "name": "QA Testing (Manual)",
+      "duration": "3 months",
+      "level": "Intermediate",
+      "description": "Gain practical skills in manual quality assurance testing to ensure software functionality and performance meet the required standards.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introduction to QA",
+          "date": "2024-02-01T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Testing Strategies",
+          "date": "2024-02-03T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Writing Test Cases",
+          "date": "2024-02-05T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Manual Testing Tools",
+          "date": "2024-02-07T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "FGH89Dj3",
+      "name": "Angular",
+      "duration": "3 months",
+      "level": "Intermediate",
+      "description": "Learn to build powerful and scalable web applications using Angular, one of the most popular front-end frameworks.",
+      "classes": [
+        {
+          "id": 1,
+          "name": "Introducción y configuración de herramientas",
+          "date": "2024-09-09T00:00:00.000Z"
+        },
+        {
+          "id": 2,
+          "name": "Componentes y Elementos de un proyecto Angular",
+          "date": "2024-09-11T00:00:00.000Z"
+        },
+        {
+          "id": 3,
+          "name": "Typescript",
+          "date": "2024-09-16T00:00:00.000Z"
+        },
+        {
+          "id": 4,
+          "name": "Interpolación y Directivas",
+          "date": "2024-09-18T00:00:00.000Z"
+        },
+        {
+          "id": 5,
+          "name": "Comunicación entre componentes",
+          "date": "2024-09-23T00:00:00.000Z"
+        },
+        {
+          "id": 6,
+          "name": "Formularios en Angular / Reactive Forms",
+          "date": "2024-09-25T00:00:00.000Z"
+        },
+        {
+          "id": 7,
+          "name": "Angular Material",
+          "date": "2024-09-30T00:00:00.000Z"
+        },
+        {
+          "id": 8,
+          "name": "Pipes y Directivas Personalizadas",
+          "date": "2024-10-02T00:00:00.000Z"
+        },
+        {
+          "id": 9,
+          "name": "Servicios y RxJS",
+          "date": "2024-10-07T00:00:00.000Z"
+        },
+        {
+          "id": 10,
+          "name": "Introducción a la programación reactiva con RxJS",
+          "date": "2024-10-09T00:00:00.000Z"
+        },
+        {
+          "id": 11,
+          "name": "Router",
+          "date": "2024-10-14T00:00:00.000Z"
+        },
+        {
+          "id": 12,
+          "name": "Módulos",
+          "date": "2024-10-16T00:00:00.000Z"
+        },
+        {
+          "id": 13,
+          "name": "Lazy Loading de módulos y Guards",
+          "date": "2024-10-21T00:00:00.000Z"
+        },
+        {
+          "id": 14,
+          "name": "Llamadas API REST",
+          "date": "2024-10-23T00:00:00.000Z"
+        },
+        {
+          "id": 15,
+          "name": "Tests unitarios en Angular",
+          "date": "2024-10-28T00:00:00.000Z"
+        },
+        {
+          "id": 16,
+          "name": "Patrón de diseño Redux con NgRx",
+          "date": "2024-10-30T00:00:00.000Z"
+        },
+        {
+          "id": 17,
+          "name": "Feature Store en NgRx",
+          "date": "2024-11-04T00:00:00.000Z"
+        },
+        {
+          "id": 18,
+          "name": "Effects en NgRx",
+          "date": "2024-11-06T00:00:00.000Z"
+        }
+      ]
+    }
+  ],
+  "inscriptions": [
+  ]
+}
