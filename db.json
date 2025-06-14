@@ -18,7 +18,7 @@
       "password": "123123123",
       "role": "user",
       "createdAt": "2024-11-11T18:25:03.959Z",
-      "token": "GgXPxsf54tYCJzb"
+      "token": "mlj28d1pdkp"
     },
     {
       "id": "AA6L",
@@ -41,7 +41,7 @@
       "token": "Ey8VhncR9NsN7f7"
     }
   ],
-  "students": [
+  "clients": [
     {
       "id": "01JCEA5G87NWRY1X8TAF3JZZKZ",
       "firstName": "Sharla",
@@ -1409,6 +1409,5 @@
       ]
     }
   ],
-  "inscriptions": [
-  ]
+  "inscriptions": []
 }
