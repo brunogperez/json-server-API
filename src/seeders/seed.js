@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import Client from '../models/Client.js';
 import Product from '../models/Product.js';
@@ -205,9 +206,15 @@ const seedDatabase = async () => {
     await Inscription.deleteMany({});
     console.log('Base de datos limpiada');
 
-    // Insertar usuarios
-    const users = await User.insertMany(seedData.users);
-    console.log(`${users.length} usuarios insertados`);
+    // Hashear contraseñas antes de insertar usuarios
+    const usersWithHashedPasswords = await Promise.all(seedData.users.map(async (user) => {
+      const hashedPassword = await bcrypt.hash(user.password, 10);
+      return { ...user, password: hashedPassword };
+    }));
+
+    // Insertar usuarios con contraseñas hasheadas
+    const users = await User.insertMany(usersWithHashedPasswords);
+    console.log(`${users.length} usuarios insertados con contraseñas hasheadas`);
 
     // Insertar clientes
     const clients = await Client.insertMany(seedData.clients);
