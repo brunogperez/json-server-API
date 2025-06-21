@@ -1,7 +1,10 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
+import { validationResult } from 'express-validator';
 import User from '../models/User.js';
 import { authenticateToken } from '../middleware/auth.js';
+import { validateCreateUser, validateLogin } from '../validators/userValidators.js';
+import { apiLogger } from '../middleware/logger.js';
 
 const router = express.Router();
 
@@ -29,15 +32,29 @@ router.get('/:id', authenticateToken, async (req, res) => {
 });
 
 // Crear nuevo usuario
-router.post('/', async (req, res) => {
+router.post('/', validateCreateUser, async (req, res, next) => {
   try {
-    const { firstName, lastName, email, password, role } = req.body;
-    
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: 'El email ya está registrado' });
+    // Validar los datos de entrada
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        success: false,
+        errors: errors.array() 
+      });
     }
 
+    const { firstName, lastName, email, password, role } = req.body;
+    
+    // Verificar si el usuario ya existe
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ 
+        success: false,
+        error: 'El email ya está registrado' 
+      });
+    }
+
+    // Crear el nuevo usuario
     const user = new User({
       firstName,
       lastName,
@@ -47,6 +64,9 @@ router.post('/', async (req, res) => {
     });
 
     await user.save();
+    
+    // Registrar la creación exitosa
+    apiLogger.info('Usuario creado exitosamente', { userId: user._id, email: user.email });
     
     const token = jwt.sign(
       { userId: user._id, email: user.email },
@@ -66,19 +86,36 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Login
-router.post('/login', async (req, res) => {
+// Iniciar sesión
+router.post('/login', validateLogin, async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
+    // Validar los datos de entrada
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        success: false,
+        errors: errors.array() 
+      });
     }
 
-    const isValidPassword = await user.comparePassword(password);
-    if (!isValidPassword) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      apiLogger.warn('Intento de inicio de sesión fallido: usuario no encontrado', { email });
+      return res.status(400).json({ 
+        success: false,
+        error: 'Credenciales inválidas' 
+      });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      apiLogger.warn('Intento de inicio de sesión fallido: contraseña incorrecta', { userId: user._id });
+      return res.status(400).json({ 
+        success: false,
+        error: 'Credenciales inválidas' 
+      });
     }
 
     const token = jwt.sign(
@@ -134,4 +171,4 @@ router.delete('/:id', authenticateToken, async (req, res) => {
   }
 });
 
-export { router };
+export default router;

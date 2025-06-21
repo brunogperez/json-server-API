@@ -150,4 +150,4 @@ router.delete('/:id/classes/:classId', authenticateToken, async (req, res) => {
   }
 });
 
-export { router };
+export default router;

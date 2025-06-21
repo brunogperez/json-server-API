@@ -172,4 +172,4 @@ router.get('/stats/overview', authenticateToken, async (req, res) => {
   }
 });
 
-export { router };
+export default router;
