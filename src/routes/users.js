@@ -291,6 +291,39 @@ router.put('/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// Actualización parcial de usuario
+router.patch('/:id', authenticateToken, async (req, res) => {
+  try {
+    const updates = { ...req.body };
+    
+    // Si no se está actualizando la contraseña, la eliminamos de los updates
+    if (!updates.password) {
+      delete updates.password;
+    }
+    
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: updates },
+      { new: true, runValidators: true }
+    ).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({ 
+        success: false,
+        error: 'Usuario no encontrado' 
+      });
+    }
+    
+    res.json({
+      success: true,
+      data: user
+    });
+  } catch (error) {
+    handleError(res, error, 'Error al actualizar usuario');
+  }
+});
+
+// Eliminar usuario
 router.delete('/:id', authenticateToken, async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);

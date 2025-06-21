@@ -28,12 +28,7 @@ router.get('/', async (req, res) => {
     
     const total = await Client.countDocuments(query);
     
-    res.json({
-      clients,
-      totalPages: Math.ceil(total / limit),
-      currentPage: parseInt(page),
-      total
-    });
+    res.json(clients);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
