@@ -18,7 +18,7 @@
       "password": "123123123",
       "role": "user",
       "createdAt": "2024-11-11T18:25:03.959Z",
-      "token": "mlj28d1pdkp"
+      "token": "96tkiszcve"
     },
     {
       "id": "AA6L",
@@ -842,6 +842,14 @@
       "birthdate": "1991-10-24T02:00:00.000Z",
       "createdAt": "2024-11-11T20:01:39.093Z",
       "token": "7aLDvhparAqIV9y"
+    },
+    {
+      "firstName": "Daniel",
+      "lastName": "Alvarez",
+      "email": "danialvarez_@gmail.com",
+      "birthdate": "1980-06-12T03:00:00.000Z",
+      "id": "7DvL35g0CszvFxaoTctEmY7JA",
+      "createdAt": "2025-06-21T16:46:04.497Z"
     }
   ],
   "courses": [
