@@ -14,7 +14,7 @@ import inscriptionRoutes from './routes/inscriptions.js';
 
 // Importar middlewares
 import { errorHandler } from './middleware/errorHandler.js';
-import { requestLogger } from './middleware/logger.js';
+import { requestLogger, apiLogger } from './middleware/logger.js';
 
 dotenv.config();
 
@@ -34,12 +34,32 @@ app.use(helmet());
 app.use(compression());
 app.use(limiter);
 
-// CORS
+// CORS Configuration
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
-  credentials: true
+  origin: process.env.CORS_ORIGIN?.split(',') || [
+    'http://localhost:3000',
+    'http://localhost:4200',  // Angular development server
+    'http://127.0.0.1:4200'   // Alternative localhost
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Authorization']
 };
+
+// Enable pre-flight across-the-board
+app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
+
+// Log CORS requests for debugging
+app.use((req, res, next) => {
+  if (apiLogger) {
+    apiLogger.info(`CORS request from: ${req.headers.origin || 'unknown'} to ${req.method} ${req.path}`);
+  } else {
+    console.log(`[CORS] Request from: ${req.headers.origin || 'unknown'} to ${req.method} ${req.path}`);
+  }
+  next();
+});
 
 // Middlewares básicos
 app.use(express.json({ limit: '10mb' }));
