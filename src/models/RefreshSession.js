@@ -21,6 +21,13 @@ const refreshSessionSchema = new mongoose.Schema({
   revokedAt: {
     type: Date,
     default: null
+  },
+  // Sólo un token 'rotated' que vuelve a presentarse indica robo; uno cerrado
+  // por logout simplemente es inválido.
+  revokedReason: {
+    type: String,
+    enum: ['rotated', 'logout', 'revoke-all', null],
+    default: null
   }
 }, {
   timestamps: true

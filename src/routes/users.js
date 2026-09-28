@@ -93,7 +93,10 @@ const issueRefreshToken = async (user) => {
 // Invalida todos los tokens del usuario: sube tokenVersion y revoca sus sesiones.
 const revokeAllSessions = async (userId) => {
   await User.updateOne({ _id: userId }, { $inc: { tokenVersion: 1 } });
-  await RefreshSession.updateMany({ user: userId, revokedAt: null }, { revokedAt: new Date() });
+  await RefreshSession.updateMany(
+    { user: userId, revokedAt: null },
+    { revokedAt: new Date(), revokedReason: 'revoke-all' }
+  );
 };
 
 const signResetToken = (user) => jwt.sign(
@@ -299,13 +302,13 @@ router.post('/refresh', async (req, res) => {
     // Rotación atómica: sólo la primera presentación del token lo consume.
     const session = await RefreshSession.findOneAndUpdate(
       { jti: payload.jti, user: user._id, revokedAt: null },
-      { revokedAt: new Date() }
+      { revokedAt: new Date(), revokedReason: 'rotated' }
     );
     if (!session) {
-      // Token ya rotado o revocado que vuelve a usarse: posible robo.
+      // Token ya rotado que vuelve a usarse: posible robo.
       // Se cierran todas las sesiones del usuario.
-      const known = await RefreshSession.exists({ jti: payload.jti });
-      if (known) {
+      const rotated = await RefreshSession.exists({ jti: payload.jti, revokedReason: 'rotated' });
+      if (rotated) {
         await revokeAllSessions(user._id);
         apiLogger?.warn('Reuso de refresh token detectado', { userId: user._id });
         await audit('user.refresh.reuse', { req, targetUser: user._id, email: user.email });
@@ -333,7 +336,10 @@ router.post('/logout', async (req, res) => {
     try {
       const payload = jwt.verify(refreshToken, REFRESH_SECRET);
       if (payload.jti) {
-        await RefreshSession.updateOne({ jti: payload.jti, revokedAt: null }, { revokedAt: new Date() });
+        await RefreshSession.updateOne(
+          { jti: payload.jti, revokedAt: null },
+          { revokedAt: new Date(), revokedReason: 'logout' }
+        );
       }
     } catch {
       // Token inválido o vencido: no hay sesión que cerrar. Respuesta idempotente.
