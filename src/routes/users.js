@@ -1,28 +1,103 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
+import rateLimit from 'express-rate-limit';
 import { validationResult } from 'express-validator';
 import User from '../models/User.js';
-import { authenticateToken } from '../middleware/auth.js';
+import AuditLog from '../models/AuditLog.js';
+import { authenticateToken, requireAdmin, requireSelfOrAdmin } from '../middleware/auth.js';
 import { validateCreateUser, validateLogin } from '../validators/userValidators.js';
 import { apiLogger } from '../middleware/logger.js';
 
-// Middleware para manejar errores de forma consistente
-const handleError = (res, error, context = 'Error en el servidor') => {
-  console.error(`${context}:`, error);
-  if (apiLogger) {
-    apiLogger.error(context, { error: error.message, stack: error.stack });
+// Auditoría best-effort: nunca rompe el flujo principal si falla el insert.
+const audit = async (action, { req, targetUser, email, details } = {}) => {
+  try {
+    await AuditLog.create({
+      action,
+      targetUser,
+      email,
+      performedBy: req?.user?._id,
+      ip: req?.ip,
+      details
+    });
+  } catch (err) {
+    apiLogger?.warn('No se pudo registrar auditoría', { action, error: err.message });
   }
-  res.status(500).json({ 
-    success: false, 
+};
+
+const handleError = (res, error, context = 'Error en el servidor') => {
+  apiLogger?.error(context, { error: error.message, stack: error.stack });
+  res.status(500).json({
+    success: false,
     error: 'Error interno del servidor',
     details: process.env.NODE_ENV === 'development' ? error.message : undefined
   });
 };
 
+const buildUserResponse = (user) => ({
+  _id: user._id,
+  id: user._id.toString(),
+  firstName: user.firstName,
+  lastName: user.lastName,
+  email: user.email,
+  role: user.role,
+  resellerProfile: user.resellerProfile,
+  createdAt: user.createdAt
+});
+
+const signToken = (user) => jwt.sign(
+  {
+    userId: user._id,
+    email: user.email,
+    role: user.role,
+    firstName: user.firstName,
+    lastName: user.lastName
+  },
+  process.env.JWT_SECRET,
+  { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+);
+
+// Refresh token: vida larga, secreto propio (cae a JWT_SECRET+sufijo si no se
+// define uno dedicado). Sólo lleva el userId y un claim type='refresh'.
+const REFRESH_SECRET = process.env.REFRESH_TOKEN_SECRET || `${process.env.JWT_SECRET}:refresh`;
+const RESET_SECRET = process.env.PASSWORD_RESET_SECRET || `${process.env.JWT_SECRET}:reset`;
+
+const signRefreshToken = (user) => jwt.sign(
+  { userId: user._id, type: 'refresh' },
+  REFRESH_SECRET,
+  { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '30d' }
+);
+
+const signResetToken = (user) => jwt.sign(
+  // Atamos el token al hash actual: al cambiar la contraseña, el token deja de
+  // ser válido (single-use efectivo).
+  { userId: user._id, type: 'reset', ph: user.password.slice(-10) },
+  RESET_SECRET,
+  { expiresIn: process.env.PASSWORD_RESET_EXPIRES_IN || '1h' }
+);
+
+const loginLimiter = rateLimit({
+  windowMs: parseInt(process.env.LOGIN_RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
+  max: parseInt(process.env.LOGIN_RATE_LIMIT_MAX_REQUESTS) || 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: 'Demasiados intentos de inicio de sesión. Intenta de nuevo más tarde.'
+  }
+});
+
+// Limiter propio para reseteo de contraseña (no comparte cupo con el login).
+const resetLimiter = rateLimit({
+  windowMs: parseInt(process.env.LOGIN_RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
+  max: parseInt(process.env.PASSWORD_RESET_RATE_LIMIT_MAX) || 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'Demasiadas solicitudes de reseteo. Intenta más tarde.' }
+});
+
 const router = express.Router();
 
-// Obtener todos los usuarios
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const users = await User.find().select('-password');
     res.json(users);
@@ -34,25 +109,10 @@ router.get('/', authenticateToken, async (req, res) => {
 router.get('/profile', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-password');
-    
     if (!user) {
-      return res.status(404).json({ 
-        success: false,
-        error: 'Usuario no encontrado' 
-      });
+      return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
     }
-
-    const userResponse = {
-      _id: user._id,
-      id: user._id.toString(),
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      role: user.role,
-      createdAt: user.createdAt
-    };
-
-    res.json(userResponse);
+    res.json(buildUserResponse(user));
   } catch (error) {
     handleError(res, error, 'Error al obtener perfil');
   }
@@ -61,70 +121,32 @@ router.get('/profile', authenticateToken, async (req, res) => {
 router.get('/verify', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-password');
-    
     if (!user) {
-      return res.status(404).json({ 
-        success: false,
-        valid: false,
-        error: 'Usuario no encontrado' 
-      });
+      return res.status(404).json({ success: false, valid: false, error: 'Usuario no encontrado' });
     }
-
-    res.json({ 
-      success: true,
-      valid: true, 
-      user: {
-        _id: user._id,
-        id: user._id.toString(),
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        role: user.role,
-        createdAt: user.createdAt
-      }
-    });
+    res.json({ success: true, valid: true, user: buildUserResponse(user) });
   } catch (error) {
     handleError(res, error, 'Error al verificar token');
   }
 });
 
-router.get('/by-email', authenticateToken, async (req, res) => {
+router.get('/by-email', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { email } = req.query;
-    
     if (!email) {
-      return res.status(400).json({
-        success: false,
-        error: 'El parámetro email es requerido'
-      });
+      return res.status(400).json({ success: false, error: 'El parámetro email es requerido' });
     }
-
     const user = await User.findOne({ email }).select('-password');
-    
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: 'Usuario no encontrado'
-      });
+      return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
     }
-
-    res.json({
-      success: true,
-      user: {
-        _id: user._id,
-        id: user._id.toString(),
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        role: user.role
-      }
-    });
+    res.json({ success: true, user: buildUserResponse(user) });
   } catch (error) {
     handleError(res, error, 'Error al buscar usuario por email');
   }
 });
 
-router.get('/:id', authenticateToken, async (req, res) => {
+router.get('/:id', authenticateToken, requireSelfOrAdmin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
     if (!user) {
@@ -140,20 +162,14 @@ router.post('/', validateCreateUser, async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ 
-        success: false,
-        errors: errors.array() 
-      });
+      return res.status(400).json({ success: false, errors: errors.array() });
     }
 
     const { firstName, lastName, email, password, role } = req.body;
-    
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ 
-        success: false,
-        error: 'El email ya está registrado' 
-      });
+      return res.status(409).json({ success: false, error: 'El email ya está registrado' });
     }
 
     const user = new User({
@@ -165,167 +181,213 @@ router.post('/', validateCreateUser, async (req, res) => {
     });
 
     await user.save();
-    
-    if (apiLogger) {
-      apiLogger.info('Usuario creado exitosamente', { userId: user._id, email: user.email });
-    }
-    
-    const token = jwt.sign(
-      { 
-        userId: user._id, 
-        email: user.email,
-        role: user.role,
-        firstName: user.firstName,
-        lastName: user.lastName
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
+    apiLogger?.info('Usuario creado exitosamente', { userId: user._id, email: user.email });
+    await audit('user.create', { req, targetUser: user._id, email: user.email });
 
-    const userResponse = {
-      _id: user._id,
-      id: user._id.toString(),
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      role: user.role,
-      createdAt: user.createdAt,
-      token: token
-    };
-
-    res.status(201).json(userResponse);
+    const token = signToken(user);
+    res.status(201).json({ ...buildUserResponse(user), token });
   } catch (error) {
     handleError(res, error, 'Error al crear usuario');
   }
 });
 
-router.post('/login', validateLogin, async (req, res) => {
+router.post('/login', loginLimiter, validateLogin, async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
         error: 'Datos de entrada inválidos',
-        errors: errors.array() 
+        errors: errors.array()
       });
     }
 
     const { email, password } = req.body;
-
     const user = await User.findOne({ email });
+
     if (!user) {
-      if (apiLogger) {
-        apiLogger.warn('Intento de inicio de sesión fallido: usuario no encontrado', { email });
-      }
-      return res.status(400).json({ 
+      apiLogger?.warn('Intento de inicio de sesión fallido: usuario no encontrado', { email });
+      await audit('user.login.failed', { req, email });
+      return res.status(401).json({ success: false, error: 'Credenciales inválidas' });
+    }
+
+    // Cuenta bloqueada por demasiados intentos fallidos.
+    if (user.isLocked) {
+      apiLogger?.warn('Login rechazado: cuenta bloqueada', { userId: user._id });
+      await audit('user.login.locked', { req, targetUser: user._id, email });
+      return res.status(423).json({
         success: false,
-        error: 'Credenciales inválidas' 
+        error: 'Cuenta bloqueada temporalmente por intentos fallidos. Intenta más tarde.'
       });
     }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      if (apiLogger) {
-        apiLogger.warn('Intento de inicio de sesión fallido: contraseña incorrecta', { userId: user._id });
-      }
-      return res.status(400).json({ 
-        success: false,
-        error: 'Credenciales inválidas' 
+      await user.registerFailedLogin();
+      apiLogger?.warn('Intento de inicio de sesión fallido: contraseña incorrecta', {
+        userId: user._id,
+        attempts: user.failedLoginAttempts,
+        locked: user.isLocked
       });
+      await audit(user.isLocked ? 'user.login.locked' : 'user.login.failed', {
+        req, targetUser: user._id, email, details: { attempts: user.failedLoginAttempts }
+      });
+      return res.status(401).json({ success: false, error: 'Credenciales inválidas' });
     }
 
-    const token = jwt.sign(
-      { 
-        userId: user._id, 
-        email: user.email,
-        role: user.role,
-        firstName: user.firstName,
-        lastName: user.lastName
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
+    await user.resetLoginAttempts();
+    const token = signToken(user);
+    const refreshToken = signRefreshToken(user);
+    apiLogger?.info('Inicio de sesión exitoso', { userId: user._id, email: user.email });
+    await audit('user.login.success', { req, targetUser: user._id, email });
 
-    if (apiLogger) {
-      apiLogger.info('Inicio de sesión exitoso', { userId: user._id, email: user.email });
-    }
-    const userResponse = {
-      _id: user._id,
-      id: user._id.toString(),
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      role: user.role,
-      createdAt: user.createdAt,
-      token: token
-    };
-
-    res.json(userResponse);
+    res.json({ ...buildUserResponse(user), token, refreshToken });
   } catch (error) {
-    console.error('Error en login:', error);
-    res.status(500).json({ 
-      success: false,
-      error: 'Error interno del servidor' 
-    });
+    handleError(res, error, 'Error en login');
   }
 });
 
-router.put('/:id', authenticateToken, async (req, res) => {
+// ── Refresh: emite un nuevo access token desde un refresh token válido ──
+router.post('/refresh', async (req, res) => {
   try {
-    const updates = req.body;
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json({ success: false, error: 'refreshToken requerido' });
+    }
+    let payload;
+    try {
+      payload = jwt.verify(refreshToken, REFRESH_SECRET);
+    } catch {
+      return res.status(401).json({ success: false, error: 'Refresh token inválido o expirado' });
+    }
+    if (payload.type !== 'refresh') {
+      return res.status(401).json({ success: false, error: 'Tipo de token inválido' });
+    }
+    const user = await User.findById(payload.userId);
+    if (!user) return res.status(401).json({ success: false, error: 'Usuario no encontrado' });
+
+    res.json({ ...buildUserResponse(user), token: signToken(user) });
+  } catch (error) {
+    handleError(res, error, 'Error al refrescar token');
+  }
+});
+
+// ── Password reset: solicitud ─────────────────────────────────────────
+// Respuesta genérica (no revela si el email existe). En dev devolvemos el
+// token para poder probar el flujo sin servidor de correo.
+router.post('/password-reset/request', resetLimiter, async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ success: false, error: 'email requerido' });
+
+    const user = await User.findOne({ email });
+    const generic = { success: true, message: 'Si el email existe, se enviaron instrucciones de reseteo.' };
+
+    if (!user) return res.json(generic);
+
+    const resetToken = signResetToken(user);
+    // En producción acá iría el envío por email (SMTP/servicio). Por ahora se
+    // registra en el log y, sólo en dev, se devuelve en la respuesta.
+    apiLogger?.info('Password reset solicitado', { userId: user._id, email });
+    await audit('user.update', { req, targetUser: user._id, email, details: { action: 'password-reset-request' } });
+
+    if (process.env.NODE_ENV !== 'production') {
+      return res.json({ ...generic, resetToken });
+    }
+    res.json(generic);
+  } catch (error) {
+    handleError(res, error, 'Error en solicitud de reseteo');
+  }
+});
+
+// ── Password reset: confirmación ──────────────────────────────────────
+router.post('/password-reset/confirm', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    if (!token || !newPassword) {
+      return res.status(400).json({ success: false, error: 'token y newPassword requeridos' });
+    }
+    if (String(newPassword).length < 6) {
+      return res.status(400).json({ success: false, error: 'La contraseña debe tener al menos 6 caracteres' });
+    }
+    let payload;
+    try {
+      payload = jwt.verify(token, RESET_SECRET);
+    } catch {
+      return res.status(401).json({ success: false, error: 'Token de reseteo inválido o expirado' });
+    }
+    if (payload.type !== 'reset') {
+      return res.status(401).json({ success: false, error: 'Tipo de token inválido' });
+    }
+    const user = await User.findById(payload.userId);
+    if (!user) return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
+
+    // El token está atado al hash anterior: si ya cambió, es inválido (single-use).
+    if (payload.ph !== user.password.slice(-10)) {
+      return res.status(401).json({ success: false, error: 'El token ya fue utilizado' });
+    }
+
+    user.password = newPassword; // pre('save') re-hashea
+    user.failedLoginAttempts = 0; // limpia lockout previo
+    user.lockUntil = undefined;
+    await user.save();
+    apiLogger?.info('Password reseteado', { userId: user._id });
+    await audit('user.update', { req, targetUser: user._id, email: user.email, details: { action: 'password-reset-confirm' } });
+
+    res.json({ success: true, message: 'Contraseña actualizada correctamente' });
+  } catch (error) {
+    handleError(res, error, 'Error al confirmar reseteo');
+  }
+});
+
+router.put('/:id', authenticateToken, requireSelfOrAdmin, async (req, res) => {
+  try {
+    const updates = { ...req.body };
     delete updates.password;
-    
+    if (req.user.role !== 'admin') delete updates.role;
+
     const user = await User.findByIdAndUpdate(
       req.params.id,
       updates,
       { new: true, runValidators: true }
     ).select('-password');
-    
+
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-    
+    await audit('user.update', { req, targetUser: user._id, email: user.email, details: { fields: Object.keys(updates) } });
     res.json(user);
   } catch (error) {
     handleError(res, error, 'Error al actualizar usuario');
   }
 });
 
-// Actualización parcial de usuario
-router.patch('/:id', authenticateToken, async (req, res) => {
+router.patch('/:id', authenticateToken, requireSelfOrAdmin, async (req, res) => {
   try {
     const updates = { ...req.body };
-    
-    // Si no se está actualizando la contraseña, la eliminamos de los updates
-    if (!updates.password) {
-      delete updates.password;
-    }
-    
+    delete updates.password;
+    if (req.user.role !== 'admin') delete updates.role;
+
     const user = await User.findByIdAndUpdate(
       req.params.id,
       { $set: updates },
       { new: true, runValidators: true }
     ).select('-password');
-    
+
     if (!user) {
-      return res.status(404).json({ 
-        success: false,
-        error: 'Usuario no encontrado' 
-      });
+      return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
     }
-    
-    res.json({
-      success: true,
-      data: user
-    });
+    res.json({ success: true, data: user });
   } catch (error) {
     handleError(res, error, 'Error al actualizar usuario');
   }
 });
 
-// Eliminar usuario
-router.delete('/:id', authenticateToken, async (req, res) => {
+router.delete('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
+    if (req.user._id.toString() === req.params.id) {
+      return res.status(400).json({ error: 'No puede eliminar su propio usuario' });
+    }
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });

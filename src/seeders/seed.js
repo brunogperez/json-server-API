@@ -1,271 +1,247 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import User from '../models/User.js';
-import Client from '../models/Client.js';
-import Product from '../models/Product.js';
-import Inscription from '../models/Inscription.js';
 import dotenv from 'dotenv';
+
+import User from '../models/User.js';
+import Reseller from '../models/Reseller.js';
+import EndCustomer from '../models/EndCustomer.js';
+import Plan from '../models/Plan.js';
+import Subscription from '../models/Subscription.js';
+import CreditTransaction from '../models/CreditTransaction.js';
+import { encryptCredentials } from '../utils/crypto.js';
 
 dotenv.config();
 
-// Datos del db.json original
+const addDays = (date, days) => {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+};
+
 const seedData = {
   users: [
+    { firstName: 'Admin', lastName: 'Owner', email: 'admin@mail.com', password: '123123123', role: 'admin' },
+    { firstName: 'Bruno', lastName: 'Perez', email: 'bruno.perez@mail.com', password: '123123123', role: 'admin' }
+  ],
+  ownerReseller: {
+    firstName: 'Owner',
+    lastName: 'Direct',
+    email: 'owner@local',
+    businessName: 'Owner Direct Sales',
+    isOwner: true,
+    credits: 0,
+    active: true
+  },
+  resellers: [
     {
-      firstName: "Paula",
-      lastName: "Martinez",
-      email: "paulamartinez@mail.com",
-      password: "123123123",
-      role: "admin"
+      firstName: 'Juan', lastName: 'Garcia', email: 'juan.garcia@reseller.com',
+      phone: '+541112345678', businessName: 'Garcia Services', credits: 100, active: true
     },
     {
-      firstName: "Test",
-      lastName: "Test",
-      email: "test@test.com",
-      password: "123123123",
-      role: "user"
+      firstName: 'Maria', lastName: 'Lopez', email: 'maria.lopez@reseller.com',
+      phone: '+541198765432', businessName: 'Lopez Digital', credits: 50, active: true
     },
     {
-      firstName: "Admin",
-      lastName: "Admin",
-      email: "admin@mail.com",
-      password: "123123123",
-      role: "admin"
-    },
-    {
-      firstName: "Bruno",
-      lastName: "Perez",
-      email: "bruno.perez@mail.com",
-      password: "123123123",
-      role: "admin"
+      firstName: 'Pedro', lastName: 'Rodriguez', email: 'pedro.rodriguez@reseller.com',
+      phone: '+541155667788', businessName: 'Rodriguez Tech', credits: 0, active: true
     }
   ],
-  clients: [
+  plans: [
     {
-      firstName: "Sharla",
-      lastName: "Dicka",
-      email: "sdick0@unblog.fr",
-      birthdate: "1995-10-27T12:45:01Z"
+      name: 'IPTV 1 Mes - 1 Pantalla', serviceType: 'IPTV',
+      durationDays: 30, capacity: 1, creditCost: 1, ownerPrice: 5, suggestedResellerPrice: 10,
+      credentialFields: ['username', 'password', 'serverUrl'],
+      description: 'IPTV mensual una pantalla', active: true
     },
     {
-      firstName: "Melly",
-      lastName: "Bauckham",
-      email: "mbauckham2@mozilla.org",
-      birthdate: "1993-08-22T08:30:15Z"
+      name: 'IPTV 1 Mes - 2 Pantallas', serviceType: 'IPTV',
+      durationDays: 30, capacity: 2, creditCost: 2, ownerPrice: 8, suggestedResellerPrice: 15,
+      credentialFields: ['username', 'password', 'serverUrl'],
+      description: 'IPTV mensual dos pantallas', active: true
     },
     {
-      firstName: "Benny",
-      lastName: "Nieass",
-      email: "bnieass3@theatlantic.com",
-      birthdate: "2003-05-30T05:09:23Z"
+      name: 'IPTV 12 Meses - 2 Pantallas', serviceType: 'IPTV',
+      durationDays: 365, capacity: 2, creditCost: 18, ownerPrice: 70, suggestedResellerPrice: 140,
+      credentialFields: ['username', 'password', 'serverUrl'],
+      description: 'IPTV anual dos pantallas', active: true
     },
     {
-      firstName: "Bruno",
-      lastName: "Perez",
-      email: "brunogperez@mail.com",
-      birthdate: "1991-10-24T02:00:00.000Z"
-    }
-  ],
-  products: [
-    {
-      name: "Web Development",
-      duration: "5 months",
-      level: "Intermediate",
-      description: "Learn to build websites from scratch, mastering HTML, CSS, and JavaScript to create interactive and responsive pages.",
-      classes: [
-        {
-          name: "Introduction to Web Development",
-          date: "2024-01-01T00:00:00.000Z"
-        },
-        {
-          name: "HTML Basics",
-          date: "2024-01-03T00:00:00.000Z"
-        },
-        {
-          name: "CSS Fundamentals",
-          date: "2024-01-05T00:00:00.000Z"
-        },
-        {
-          name: "JavaScript for Beginners",
-          date: "2024-01-07T00:00:00.000Z"
-        }
-      ]
+      name: 'VPN Premium 1 Mes', serviceType: 'VPN',
+      durationDays: 30, capacity: 5, creditCost: 2, ownerPrice: 6, suggestedResellerPrice: 12,
+      credentialFields: ['username', 'password', 'configUrl'],
+      description: 'VPN 5 dispositivos simultáneos', active: true
     },
     {
-      name: "JavaScript",
-      duration: "2 months",
-      level: "Intermediate",
-      description: "Master JavaScript to add interactivity to your web projects and build client-side dynamic applications.",
-      classes: [
-        {
-          name: "Introduction to JavaScript",
-          date: "2024-02-01T00:00:00.000Z"
-        },
-        {
-          name: "Variables and Functions",
-          date: "2024-02-03T00:00:00.000Z"
-        },
-        {
-          name: "DOM Manipulation",
-          date: "2024-02-05T00:00:00.000Z"
-        },
-        {
-          name: "Advanced JavaScript",
-          date: "2024-02-07T00:00:00.000Z"
-        }
-      ]
+      name: 'VPN Premium 12 Meses', serviceType: 'VPN',
+      durationDays: 365, capacity: 5, creditCost: 20, ownerPrice: 60, suggestedResellerPrice: 120,
+      credentialFields: ['username', 'password', 'configUrl'],
+      description: 'VPN anual 5 dispositivos', active: true
     },
     {
-      name: "ReactJS",
-      duration: "2 months",
-      level: "Intermediate",
-      description: "Learn the fundamentals of ReactJS to build modern and efficient user interfaces with reusable components.",
-      classes: [
-        {
-          name: "React Basics",
-          date: "2024-03-01T00:00:00.000Z"
-        },
-        {
-          name: "Components and Props",
-          date: "2024-03-03T00:00:00.000Z"
-        },
-        {
-          name: "State and Lifecycle",
-          date: "2024-03-05T00:00:00.000Z"
-        },
-        {
-          name: "Hooks in React",
-          date: "2024-03-07T00:00:00.000Z"
-        }
-      ]
-    },
-    {
-      name: "Python",
-      duration: "2 months",
-      level: "Beginner",
-      description: "Discover the versatility of Python, a powerful language for automation, data analysis, and software development.",
-      classes: [
-        {
-          name: "Introduction to Python",
-          date: "2024-05-01T00:00:00.000Z"
-        },
-        {
-          name: "Data Types and Variables",
-          date: "2024-05-03T00:00:00.000Z"
-        },
-        {
-          name: "Control Structures",
-          date: "2024-05-05T00:00:00.000Z"
-        },
-        {
-          name: "Functions in Python",
-          date: "2024-05-07T00:00:00.000Z"
-        }
-      ]
-    },
-    {
-      name: "Angular",
-      duration: "3 months",
-      level: "Intermediate",
-      description: "Learn to build powerful and scalable web applications using Angular, one of the most popular front-end frameworks.",
-      classes: [
-        {
-          name: "Introducción y configuración de herramientas",
-          date: "2024-09-09T00:00:00.000Z"
-        },
-        {
-          name: "Componentes y Elementos de un proyecto Angular",
-          date: "2024-09-11T00:00:00.000Z"
-        },
-        {
-          name: "Typescript",
-          date: "2024-09-16T00:00:00.000Z"
-        },
-        {
-          name: "Interpolación y Directivas",
-          date: "2024-09-18T00:00:00.000Z"
-        }
-      ]
+      name: 'Hosting Starter Mensual', serviceType: 'Hosting',
+      durationDays: 30, capacity: 1, creditCost: 3, ownerPrice: 10, suggestedResellerPrice: 20,
+      credentialFields: ['controlPanelUrl', 'username', 'password', 'ftpHost'],
+      description: 'Hosting básico 10GB', active: true
     }
   ]
 };
 
 const seedDatabase = async () => {
   try {
-    // Conectar a MongoDB
     const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/fenixAPI';
-    await mongoose.connect(MONGODB_URI, {
-      dbName: 'fenixAPI'
+    await mongoose.connect(MONGODB_URI, { dbName: process.env.DB_NAME || 'fenixAPI' });
+    console.log('✅ Conectado a MongoDB');
+
+    await Promise.all([
+      User.deleteMany({}),
+      Reseller.deleteMany({}),
+      EndCustomer.deleteMany({}),
+      Plan.deleteMany({}),
+      Subscription.deleteMany({}),
+      CreditTransaction.deleteMany({})
+    ]);
+    console.log('🧹 Base de datos limpiada');
+
+    const usersHashed = await Promise.all(
+      seedData.users.map(async (u) => ({ ...u, password: await bcrypt.hash(u.password, 10) }))
+    );
+    const users = await User.insertMany(usersHashed);
+    const admin = users[0];
+    console.log(`👤 ${users.length} usuarios admin insertados`);
+
+    const ownerReseller = await Reseller.create(seedData.ownerReseller);
+    console.log(`👑 Owner reseller: ${ownerReseller.email}`);
+
+    const resellers = await Reseller.insertMany(seedData.resellers);
+    console.log(`🏪 ${resellers.length} resellers insertados`);
+
+    // Multi-tenancy (Story 19): usuario role='reseller' vinculado a Garcia (resellers[0]).
+    // Password en texto plano: User.create dispara el hook pre('save') que lo
+    // hashea una vez (insertMany NO lo hace; create SÍ).
+    const resellerUser = await User.create({
+      firstName: resellers[0].firstName,
+      lastName: resellers[0].lastName,
+      email: 'reseller.garcia@mail.com',
+      password: '123123123',
+      role: 'reseller',
+      resellerProfile: resellers[0]._id
     });
-    console.log('Conectado a MongoDB - Base de datos: fenixAPI');
+    console.log(`🔐 Usuario reseller: ${resellerUser.email} → ${resellers[0].businessName}`);
 
-    // Limpiar la base de datos
-    await User.deleteMany({});
-    await Client.deleteMany({});
-    await Product.deleteMany({});
-    await Inscription.deleteMany({});
-    console.log('Base de datos limpiada');
+    const initialTxs = resellers
+      .filter(r => r.credits > 0)
+      .map(r => ({
+        reseller: r._id, type: 'topup',
+        amount: r.credits, balanceAfter: r.credits,
+        note: 'Saldo inicial seed', performedBy: admin._id
+      }));
+    if (initialTxs.length) await CreditTransaction.insertMany(initialTxs);
 
-    // Hashear contraseñas antes de insertar usuarios
-    const usersWithHashedPasswords = await Promise.all(seedData.users.map(async (user) => {
-      const hashedPassword = await bcrypt.hash(user.password, 10);
-      return { ...user, password: hashedPassword };
-    }));
+    const plans = await Plan.insertMany(seedData.plans);
+    console.log(`📦 ${plans.length} planes insertados`);
 
-    // Insertar usuarios con contraseñas hasheadas
-    const users = await User.insertMany(usersWithHashedPasswords);
-    console.log(`${users.length} usuarios insertados con contraseñas hasheadas`);
-
-    // Insertar clientes
-    const clients = await Client.insertMany(seedData.clients);
-    console.log(`${clients.length} clientes insertados`);
-
-    // Insertar productos
-    const products = await Product.insertMany(seedData.products);
-    console.log(`${products.length} productos insertados`);
-
-    // Crear algunas inscripciones de ejemplo
-    const sampleInscriptions = [
+    const customers = await EndCustomer.insertMany([
       {
-        client: clients[0]._id,
-        product: products[0]._id,
-        status: 'active',
-        progress: 25
+        firstName: 'Carlos', lastName: 'Directo', email: 'carlos@cliente.com',
+        phone: '+541133334444', reseller: ownerReseller._id, active: true
       },
       {
-        client: clients[1]._id,
-        product: products[1]._id,
-        status: 'active',
-        progress: 75
+        firstName: 'Ana', lastName: 'Cliente', email: 'ana@cliente.com',
+        phone: '+541144445555', reseller: resellers[0]._id, active: true
       },
       {
-        client: clients[2]._id,
-        product: products[2]._id,
-        status: 'completed',
-        progress: 100,
-        completionDate: new Date()
+        firstName: 'Luis', lastName: 'Suscriptor', email: 'luis@cliente.com',
+        phone: '+541155556666', reseller: resellers[0]._id, active: true
       },
       {
-        client: clients[3]._id,
-        product: products[3]._id,
-        status: 'active',
-        progress: 50
+        firstName: 'Sofia', lastName: 'Premium', email: 'sofia@cliente.com',
+        phone: '+541166667777', reseller: resellers[1]._id, active: true
       }
-    ];
+    ]);
+    console.log(`👥 ${customers.length} clientes finales insertados`);
 
-    const inscriptions = await Inscription.insertMany(sampleInscriptions);
-    console.log(`${inscriptions.length} inscripciones insertadas`);
+    const planIptv1m = plans[0];
+    const planIptv12m = plans[2];
+    const planVpn1m = plans[3];
+    const planHosting = plans[5];
 
-    console.log('✅ Migración completada exitosamente');
-    console.log('\nCredenciales de prueba:');
-    console.log('Admin: admin@mail.com / 123123123');
-    console.log('Usuario: test@test.com / 123123123');
-    
+    const buildSub = (customer, reseller, plan, salePrice, daysAgo, credentials) => {
+      const start = addDays(new Date(), -daysAgo);
+      return {
+        endCustomer: customer._id,
+        soldBy: reseller._id,
+        plan: plan._id,
+        planSnapshot: {
+          name: plan.name, serviceType: plan.serviceType,
+          durationDays: plan.durationDays, capacity: plan.capacity, creditCost: plan.creditCost
+        },
+        salePrice,
+        startDate: start,
+        endDate: addDays(start, plan.durationDays),
+        status: 'active',
+        // insertMany no dispara pre('save'): ciframos las credenciales acá.
+        credentials: encryptCredentials(credentials)
+      };
+    };
+
+    const subs = await Subscription.insertMany([
+      buildSub(customers[0], ownerReseller, planIptv1m, planIptv1m.ownerPrice, 5,
+        { username: 'iptv_carlos', password: 'demo123', serverUrl: 'http://iptv.example.com:8080' }),
+      buildSub(customers[1], resellers[0], planIptv12m, planIptv12m.suggestedResellerPrice, 10,
+        { username: 'iptv_ana', password: 'demo456', serverUrl: 'http://iptv.example.com:8080' }),
+      buildSub(customers[2], resellers[0], planVpn1m, planVpn1m.suggestedResellerPrice, 2,
+        { username: 'vpn_luis', password: 'demo789', configUrl: 'http://vpn.example.com/config.ovpn' }),
+      buildSub(customers[3], resellers[1], planHosting, planHosting.suggestedResellerPrice, 30,
+        { controlPanelUrl: 'http://cpanel.example.com', username: 'sofia_host', password: 'demo000', ftpHost: 'ftp.example.com' })
+    ]);
+    console.log(`📅 ${subs.length} suscripciones insertadas`);
+
+    let garciaBalance = resellers[0].credits;
+    let lopezBalance = resellers[1].credits;
+    const consumeTxs = [];
+
+    garciaBalance -= planIptv12m.creditCost;
+    consumeTxs.push({
+      reseller: resellers[0]._id, type: 'consume',
+      amount: -planIptv12m.creditCost, balanceAfter: garciaBalance,
+      relatedSubscription: subs[1]._id,
+      note: `Alta ${planIptv12m.serviceType} - ${planIptv12m.name}`,
+      performedBy: admin._id
+    });
+    garciaBalance -= planVpn1m.creditCost;
+    consumeTxs.push({
+      reseller: resellers[0]._id, type: 'consume',
+      amount: -planVpn1m.creditCost, balanceAfter: garciaBalance,
+      relatedSubscription: subs[2]._id,
+      note: `Alta ${planVpn1m.serviceType} - ${planVpn1m.name}`,
+      performedBy: admin._id
+    });
+    lopezBalance -= planHosting.creditCost;
+    consumeTxs.push({
+      reseller: resellers[1]._id, type: 'consume',
+      amount: -planHosting.creditCost, balanceAfter: lopezBalance,
+      relatedSubscription: subs[3]._id,
+      note: `Alta ${planHosting.serviceType} - ${planHosting.name}`,
+      performedBy: admin._id
+    });
+    await CreditTransaction.insertMany(consumeTxs);
+
+    await Reseller.findByIdAndUpdate(resellers[0]._id, { credits: garciaBalance });
+    await Reseller.findByIdAndUpdate(resellers[1]._id, { credits: lopezBalance });
+
+    console.log('\n✅ Migración completada');
+    console.log('\nCredenciales admin:');
+    console.log('  admin@mail.com / 123123123');
+    console.log('  bruno.perez@mail.com / 123123123');
+    console.log(`\nOwner reseller ID: ${ownerReseller._id}`);
+    console.log(`Saldos finales: Garcia=${garciaBalance}, Lopez=${lopezBalance}, Rodriguez=${resellers[2].credits}`);
+    console.log(`\nTipos de servicio sembrados: IPTV, VPN, Hosting`);
   } catch (error) {
-    console.error('❌ Error en la migración:', error);
+    console.error('❌ Error en migración:', error);
+    process.exitCode = 1;
   } finally {
     await mongoose.connection.close();
-    process.exit(0);
+    process.exit(process.exitCode || 0);
   }
 };
 
