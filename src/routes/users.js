@@ -301,11 +301,12 @@ router.post('/password-reset/request', resetLimiter, async (req, res) => {
 
     const resetToken = signResetToken(user);
     // En producción acá iría el envío por email (SMTP/servicio). Por ahora se
-    // registra en el log y, sólo en dev, se devuelve en la respuesta.
+    // registra en el log y, sólo con NODE_ENV explícito de dev/test, se devuelve
+    // en la respuesta. Un NODE_ENV sin definir NO expone el token.
     apiLogger?.info('Password reset solicitado', { userId: user._id, email });
     await audit('user.update', { req, targetUser: user._id, email, details: { action: 'password-reset-request' } });
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (['development', 'test'].includes(process.env.NODE_ENV)) {
       return res.json({ ...generic, resetToken });
     }
     res.json(generic);
