@@ -33,6 +33,18 @@ const handleError = (res, error, context = 'Error en el servidor') => {
   });
 };
 
+// Campos que cada rol puede modificar vía PUT/PATCH. Todo lo demás (password,
+// failedLoginAttempts, lockUntil, etc.) se descarta para evitar asignación masiva.
+const SELF_EDITABLE_FIELDS = ['firstName', 'lastName', 'email'];
+const ADMIN_EDITABLE_FIELDS = [...SELF_EDITABLE_FIELDS, 'role', 'resellerProfile'];
+
+const pickAllowedUpdates = (body, isAdmin) => {
+  const allowed = isAdmin ? ADMIN_EDITABLE_FIELDS : SELF_EDITABLE_FIELDS;
+  return Object.fromEntries(
+    Object.entries(body || {}).filter(([key]) => allowed.includes(key))
+  );
+};
+
 const buildUserResponse = (user) => ({
   _id: user._id,
   id: user._id.toString(),
@@ -165,7 +177,8 @@ router.post('/', validateCreateUser, async (req, res) => {
       return res.status(400).json({ success: false, errors: errors.array() });
     }
 
-    const { firstName, lastName, email, password, role } = req.body;
+    // El registro público siempre crea role='user'; el rol lo asigna un admin después.
+    const { firstName, lastName, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -177,7 +190,7 @@ router.post('/', validateCreateUser, async (req, res) => {
       lastName,
       email,
       password,
-      role: role || 'user'
+      role: 'user'
     });
 
     await user.save();
@@ -342,9 +355,7 @@ router.post('/password-reset/confirm', async (req, res) => {
 
 router.put('/:id', authenticateToken, requireSelfOrAdmin, async (req, res) => {
   try {
-    const updates = { ...req.body };
-    delete updates.password;
-    if (req.user.role !== 'admin') delete updates.role;
+    const updates = pickAllowedUpdates(req.body, req.user.role === 'admin');
 
     const user = await User.findByIdAndUpdate(
       req.params.id,
@@ -364,9 +375,7 @@ router.put('/:id', authenticateToken, requireSelfOrAdmin, async (req, res) => {
 
 router.patch('/:id', authenticateToken, requireSelfOrAdmin, async (req, res) => {
   try {
-    const updates = { ...req.body };
-    delete updates.password;
-    if (req.user.role !== 'admin') delete updates.role;
+    const updates = pickAllowedUpdates(req.body, req.user.role === 'admin');
 
     const user = await User.findByIdAndUpdate(
       req.params.id,
