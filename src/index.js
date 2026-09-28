@@ -3,6 +3,7 @@
 // leyendo process.env a nivel de módulo. Si dotenv corriera después, esos
 // limiters caerían al default. Este side-effect import garantiza el orden.
 import 'dotenv/config';
+import './config/checkEnv.js';
 
 import express from 'express';
 import mongoose from 'mongoose';

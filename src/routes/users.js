@@ -68,8 +68,9 @@ const signToken = (user) => jwt.sign(
   { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
 );
 
-// Refresh token: vida larga, secreto propio (cae a JWT_SECRET+sufijo si no se
-// define uno dedicado). Sólo lleva el userId y un claim type='refresh'.
+// Refresh token: vida larga, secreto propio. En desarrollo cae a JWT_SECRET+sufijo
+// si no se define uno dedicado; en producción config/env.js exige ambos secretos.
+// Sólo lleva el userId y un claim type='refresh'.
 const REFRESH_SECRET = process.env.REFRESH_TOKEN_SECRET || `${process.env.JWT_SECRET}:refresh`;
 const RESET_SECRET = process.env.PASSWORD_RESET_SECRET || `${process.env.JWT_SECRET}:reset`;
 
