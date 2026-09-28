@@ -1,9 +1,11 @@
+import crypto from 'crypto';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import rateLimit from 'express-rate-limit';
 import { validationResult } from 'express-validator';
 import User from '../models/User.js';
 import AuditLog from '../models/AuditLog.js';
+import RefreshSession from '../models/RefreshSession.js';
 import { authenticateToken, requireAdmin, requireSelfOrAdmin } from '../middleware/auth.js';
 import { validateCreateUser, validateLogin } from '../validators/userValidators.js';
 import { apiLogger } from '../middleware/logger.js';
@@ -62,7 +64,8 @@ const signToken = (user) => jwt.sign(
     email: user.email,
     role: user.role,
     firstName: user.firstName,
-    lastName: user.lastName
+    lastName: user.lastName,
+    tv: user.tokenVersion ?? 0
   },
   process.env.JWT_SECRET,
   { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
@@ -74,11 +77,24 @@ const signToken = (user) => jwt.sign(
 const REFRESH_SECRET = process.env.REFRESH_TOKEN_SECRET || `${process.env.JWT_SECRET}:refresh`;
 const RESET_SECRET = process.env.PASSWORD_RESET_SECRET || `${process.env.JWT_SECRET}:reset`;
 
-const signRefreshToken = (user) => jwt.sign(
-  { userId: user._id, type: 'refresh' },
-  REFRESH_SECRET,
-  { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '30d' }
-);
+// Emite un refresh token y registra su sesión (jti) para poder rotarlo/revocarlo.
+const issueRefreshToken = async (user) => {
+  const jti = crypto.randomUUID();
+  const token = jwt.sign(
+    { userId: user._id, type: 'refresh', tv: user.tokenVersion ?? 0 },
+    REFRESH_SECRET,
+    { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '30d', jwtid: jti }
+  );
+  const { exp } = jwt.decode(token);
+  await RefreshSession.create({ user: user._id, jti, expiresAt: new Date(exp * 1000) });
+  return token;
+};
+
+// Invalida todos los tokens del usuario: sube tokenVersion y revoca sus sesiones.
+const revokeAllSessions = async (userId) => {
+  await User.updateOne({ _id: userId }, { $inc: { tokenVersion: 1 } });
+  await RefreshSession.updateMany({ user: userId, revokedAt: null }, { revokedAt: new Date() });
+};
 
 const signResetToken = (user) => jwt.sign(
   // Atamos el token al hash actual: al cambiar la contraseña, el token deja de
@@ -251,7 +267,7 @@ router.post('/login', loginLimiter, validateLogin, async (req, res) => {
 
     await user.resetLoginAttempts();
     const token = signToken(user);
-    const refreshToken = signRefreshToken(user);
+    const refreshToken = await issueRefreshToken(user);
     apiLogger?.info('Inicio de sesión exitoso', { userId: user._id, email: user.email });
     await audit('user.login.success', { req, targetUser: user._id, email });
 
@@ -274,15 +290,68 @@ router.post('/refresh', async (req, res) => {
     } catch {
       return res.status(401).json({ success: false, error: 'Refresh token inválido o expirado' });
     }
-    if (payload.type !== 'refresh') {
+    if (payload.type !== 'refresh' || !payload.jti) {
       return res.status(401).json({ success: false, error: 'Tipo de token inválido' });
     }
     const user = await User.findById(payload.userId);
     if (!user) return res.status(401).json({ success: false, error: 'Usuario no encontrado' });
 
-    res.json({ ...buildUserResponse(user), token: signToken(user) });
+    // Rotación atómica: sólo la primera presentación del token lo consume.
+    const session = await RefreshSession.findOneAndUpdate(
+      { jti: payload.jti, user: user._id, revokedAt: null },
+      { revokedAt: new Date() }
+    );
+    if (!session) {
+      // Token ya rotado o revocado que vuelve a usarse: posible robo.
+      // Se cierran todas las sesiones del usuario.
+      const known = await RefreshSession.exists({ jti: payload.jti });
+      if (known) {
+        await revokeAllSessions(user._id);
+        apiLogger?.warn('Reuso de refresh token detectado', { userId: user._id });
+        await audit('user.refresh.reuse', { req, targetUser: user._id, email: user.email });
+      }
+      return res.status(401).json({ success: false, error: 'Refresh token inválido o expirado' });
+    }
+    if ((payload.tv ?? 0) !== (user.tokenVersion ?? 0)) {
+      return res.status(401).json({ success: false, error: 'Refresh token revocado' });
+    }
+
+    const rotatedRefreshToken = await issueRefreshToken(user);
+    res.json({ ...buildUserResponse(user), token: signToken(user), refreshToken: rotatedRefreshToken });
   } catch (error) {
     handleError(res, error, 'Error al refrescar token');
+  }
+});
+
+// ── Logout: revoca el refresh token de esta sesión ─────────────────────
+router.post('/logout', async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json({ success: false, error: 'refreshToken requerido' });
+    }
+    try {
+      const payload = jwt.verify(refreshToken, REFRESH_SECRET);
+      if (payload.jti) {
+        await RefreshSession.updateOne({ jti: payload.jti, revokedAt: null }, { revokedAt: new Date() });
+      }
+    } catch {
+      // Token inválido o vencido: no hay sesión que cerrar. Respuesta idempotente.
+    }
+    res.json({ success: true, message: 'Sesión cerrada' });
+  } catch (error) {
+    handleError(res, error, 'Error al cerrar sesión');
+  }
+});
+
+// ── Logout global: invalida access y refresh tokens en todos los dispositivos ──
+router.post('/logout-all', authenticateToken, async (req, res) => {
+  try {
+    await revokeAllSessions(req.user._id);
+    await audit('user.logout.all', { req, targetUser: req.user._id, email: req.user.email });
+    res.json({ success: true, message: 'Todas las sesiones fueron cerradas' });
+  } catch (error) {
+    handleError(res, error, 'Error al cerrar sesiones');
   }
 });
 
@@ -346,6 +415,8 @@ router.post('/password-reset/confirm', async (req, res) => {
     user.failedLoginAttempts = 0; // limpia lockout previo
     user.lockUntil = undefined;
     await user.save();
+    // Cambió la contraseña: cualquier sesión abierta (posiblemente del atacante) se cierra.
+    await revokeAllSessions(user._id);
     apiLogger?.info('Password reseteado', { userId: user._id });
     await audit('user.update', { req, targetUser: user._id, email: user.email, details: { action: 'password-reset-confirm' } });
 

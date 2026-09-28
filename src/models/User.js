@@ -42,6 +42,12 @@ const userSchema = new mongoose.Schema({
   },
   lockUntil: {
     type: Date
+  },
+  // Se incrementa para invalidar todos los tokens emitidos (logout-all,
+  // reseteo de contraseña, reuso de refresh token).
+  tokenVersion: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true

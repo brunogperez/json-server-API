@@ -23,6 +23,11 @@ const authenticateToken = async (req, res, next) => {
       return res.status(401).json({ error: 'Usuario no encontrado' });
     }
 
+    // Tokens emitidos antes de un logout-all / reseteo quedan inválidos.
+    if ((decoded.tv ?? 0) !== (user.tokenVersion ?? 0)) {
+      return res.status(401).json({ error: 'Token revocado' });
+    }
+
     req.user = user;
     next();
   } catch (error) {

@@ -11,6 +11,8 @@ const AUDIT_ACTIONS = [
   'user.create',
   'user.update',
   'user.delete',
+  'user.refresh.reuse',
+  'user.logout.all',
 ];
 
 const auditLogSchema = new mongoose.Schema(
