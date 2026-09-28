@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import Reseller from '../models/Reseller.js';
 import CreditTransaction from '../models/CreditTransaction.js';
 import { authenticateToken, requireAdmin, requireAdminOrReseller, resellerScopeId } from '../middleware/auth.js';
-import { handleValidation, handleError } from '../middleware/helpers.js';
+import { handleValidation, handleError, searchPattern } from '../middleware/helpers.js';
 import {
   validateCreateReseller,
   validateUpdateReseller,
@@ -23,12 +23,13 @@ router.get('/', requireAdmin, async (req, res) => {
     const query = {};
     if (includeOwner !== 'true') query.isOwner = { $ne: true };
     if (active !== undefined) query.active = active === 'true';
-    if (search) {
+    const pattern = searchPattern(search);
+    if (pattern) {
       query.$or = [
-        { firstName: { $regex: search, $options: 'i' } },
-        { lastName: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-        { businessName: { $regex: search, $options: 'i' } }
+        { firstName: { $regex: pattern, $options: 'i' } },
+        { lastName: { $regex: pattern, $options: 'i' } },
+        { email: { $regex: pattern, $options: 'i' } },
+        { businessName: { $regex: pattern, $options: 'i' } }
       ];
     }
     const resellers = await Reseller.find(query).sort({ createdAt: -1 });

@@ -2,7 +2,7 @@ import express from 'express';
 import EndCustomer from '../models/EndCustomer.js';
 import Reseller from '../models/Reseller.js';
 import { authenticateToken, requireAdmin, requireAdminOrReseller, resellerScopeId } from '../middleware/auth.js';
-import { handleValidation, handleError } from '../middleware/helpers.js';
+import { handleValidation, handleError, searchPattern } from '../middleware/helpers.js';
 import {
   validateCreateEndCustomer,
   validateUpdateEndCustomer,
@@ -22,12 +22,13 @@ router.get('/', requireAdminOrReseller, async (req, res) => {
     if (scope) query.reseller = scope;          // aislamiento: fuerza su reseller
     else if (reseller) query.reseller = reseller;
     if (active !== undefined) query.active = active === 'true';
-    if (search) {
+    const pattern = searchPattern(search);
+    if (pattern) {
       query.$or = [
-        { firstName: { $regex: search, $options: 'i' } },
-        { lastName: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-        { phone: { $regex: search, $options: 'i' } }
+        { firstName: { $regex: pattern, $options: 'i' } },
+        { lastName: { $regex: pattern, $options: 'i' } },
+        { email: { $regex: pattern, $options: 'i' } },
+        { phone: { $regex: pattern, $options: 'i' } }
       ];
     }
     const customers = await EndCustomer.find(query)

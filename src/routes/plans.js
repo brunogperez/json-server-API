@@ -1,7 +1,7 @@
 import express from 'express';
 import Plan from '../models/Plan.js';
 import { authenticateToken, requireAdmin } from '../middleware/auth.js';
-import { handleValidation, handleError } from '../middleware/helpers.js';
+import { handleValidation, handleError, searchPattern } from '../middleware/helpers.js';
 import {
   validateCreatePlan,
   validateUpdatePlan,
@@ -18,11 +18,12 @@ router.get('/', async (req, res) => {
     const query = {};
     if (active !== undefined) query.active = active === 'true';
     if (serviceType) query.serviceType = serviceType;
-    if (search) {
+    const pattern = searchPattern(search);
+    if (pattern) {
       query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
-        { serviceType: { $regex: search, $options: 'i' } }
+        { name: { $regex: pattern, $options: 'i' } },
+        { description: { $regex: pattern, $options: 'i' } },
+        { serviceType: { $regex: pattern, $options: 'i' } }
       ];
     }
     const plans = await Plan.find(query).sort({ serviceType: 1, creditCost: 1 });

@@ -33,3 +33,15 @@ export const handleError = (res, error, context) => {
     details: process.env.NODE_ENV === 'development' ? error.message : undefined
   });
 };
+
+// Convierte el query param `search` en un patrón literal seguro para $regex:
+// ignora valores no string (p.ej. ?search[$ne]=x o ?search=a&search=b), limita
+// el largo y escapa metacaracteres para evitar ReDoS y búsquedas no intencionadas.
+const MAX_SEARCH_LENGTH = 100;
+
+export const searchPattern = (search) => {
+  if (typeof search !== 'string') return null;
+  const trimmed = search.trim().slice(0, MAX_SEARCH_LENGTH);
+  if (!trimmed) return null;
+  return trimmed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
